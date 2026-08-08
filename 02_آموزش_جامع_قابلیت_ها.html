@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آموزش جامع قابلیت‌ها: OpenHuman + Hermes + Excel MCP + Browser Use</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  line-height: 1.9;
+  color: #1a202c;
+  background: #f7fafc;
+  direction: rtl;
+  text-align: right;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  background: white;
+  box-shadow: 0 0 40px rgba(0,0,0,0.06);
+}
+
+/* Cover */
+.cover {
+  min-height: 90vh;
+  background: linear-gradient(135deg, #065f46 0%, #059669 50%, #0891b2 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  border-radius: 16px;
+  margin-bottom: 60px;
+  page-break-after: always;
+}
+.cover h1 { font-size: 3.2em; margin-bottom: 20px; line-height: 1.3; font-weight: 900; }
+.cover .subtitle { font-size: 1.5em; opacity: 0.95; margin-bottom: 40px; max-width: 800px; }
+.cover .badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 30px; }
+.cover .badge {
+  background: rgba(255,255,255,0.15);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.95em;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.cover .meta { margin-top: 40px; font-size: 1em; opacity: 0.85; }
+
+/* Typography */
+h1, h2, h3, h4, h5 { color: #065f46; margin-top: 40px; margin-bottom: 20px; font-weight: 800; }
+h1 { font-size: 2.5em; border-bottom: 4px solid #059669; padding-bottom: 15px; }
+h2 {
+  font-size: 2em;
+  border-right: 6px solid #10b981;
+  padding: 12px 15px;
+  background: linear-gradient(to left, #ecfdf5, transparent);
+  border-radius: 8px;
+}
+h3 { font-size: 1.5em; color: #047857; }
+h4 { font-size: 1.2em; color: #065f46; }
+p { margin-bottom: 15px; text-align: justify; }
+
+/* TOC */
+.toc {
+  background: #ecfdf5;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border-right: 6px solid #059669;
+  margin: 40px 0;
+}
+.toc h2 { border: none; background: none; padding: 0; margin-bottom: 20px; }
+.toc ol { padding-right: 25px; }
+.toc li { margin: 8px 0; font-size: 1.05em; }
+.toc a { color: #065f46; text-decoration: none; font-weight: 500; }
+.toc a:hover { color: #0891b2; text-decoration: underline; }
+.toc ol ol { margin-top: 5px; padding-right: 25px; }
+.toc ol ol li { font-size: 0.95em; color: #4b5563; }
+
+/* Code */
+pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 20px 25px;
+  border-radius: 10px;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+  margin: 20px 0;
+  font-size: 0.88em;
+  line-height: 1.65;
+  font-family: 'Consolas', 'Monaco', monospace;
+  border-right: 4px solid #10b981;
+}
+code {
+  background: #f0fdf4;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #047857;
+  font-size: 0.92em;
+  direction: ltr;
+  display: inline-block;
+}
+pre code { background: none; color: inherit; padding: 0; }
+
+/* Callouts */
+.callout {
+  padding: 18px 25px;
+  margin: 25px 0;
+  border-radius: 10px;
+  border-right: 5px solid;
+}
+.callout-info { background: #dbeafe; border-color: #2563eb; }
+.callout-warning { background: #fef3c7; border-color: #d97706; }
+.callout-success { background: #d1fae5; border-color: #059669; }
+.callout-danger { background: #fee2e2; border-color: #dc2626; }
+.callout-tip { background: #ede9fe; border-color: #7c3aed; }
+.callout-example { background: #fefce8; border-color: #ca8a04; }
+.callout strong { display: block; margin-bottom: 8px; font-size: 1.05em; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.95em;
+}
+th {
+  background: linear-gradient(135deg, #059669, #0891b2);
+  color: white;
+  padding: 14px;
+  text-align: right;
+  font-weight: 700;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+tr:nth-child(even) td { background: #f0fdf4; }
+tr:hover td { background: #dcfce7; }
+
+/* Example blocks */
+.example {
+  background: #fefce8;
+  border: 2px dashed #ca8a04;
+  padding: 20px 25px;
+  border-radius: 12px;
+  margin: 25px 0;
+  position: relative;
+}
+.example::before {
+  content: "🧪 مثال";
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #ca8a04;
+  color: white;
+  padding: 3px 15px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: 700;
+}
+.example h4 { margin-top: 5px; color: #713f12; }
+
+/* Chapter */
+.chapter-header {
+  background: linear-gradient(135deg, #064e3b, #0891b2);
+  color: white;
+  padding: 40px;
+  border-radius: 15px;
+  margin: 60px 0 40px;
+  text-align: center;
+}
+.chapter-header .chapter-num {
+  font-size: 1em;
+  opacity: 0.8;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+.chapter-header h1 {
+  color: white;
+  border: none;
+  font-size: 2.8em;
+  margin: 0;
+}
+.chapter-header .chapter-desc { margin-top: 15px; opacity: 0.95; font-size: 1.1em; }
+
+/* Feature Cards */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 25px 0; }
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  border-top: 4px solid #10b981;
+}
+.card h4 { margin-top: 0; color: #047857; }
+
+/* Section break */
+.section-break {
+  height: 3px;
+  background: linear-gradient(to left, #10b981, transparent);
+  margin: 50px 0;
+  border: none;
+}
+
+/* Function signature box */
+.func-sig {
+  background: #1e293b;
+  color: #10b981;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  direction: ltr;
+  text-align: left;
+  margin: 15px 0;
+  font-size: 0.95em;
+  border-right: 4px solid #10b981;
+}
+
+ul, ol { padding-right: 30px; margin: 15px 0; }
+li { margin: 8px 0; }
+
+.highlight {
+  background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 40%;
+  background-position: 0 88%;
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.tag {
+  display: inline-block;
+  background: #ecfdf5;
+  color: #047857;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  margin: 0 3px;
+  border: 1px solid #a7f3d0;
+}
+
+@media print {
+  body { background: white; }
+  .container { box-shadow: none; padding: 20px; }
+  .chapter-header { page-break-before: always; }
+  h2 { page-break-after: avoid; }
+  pre { page-break-inside: avoid; }
+  .example { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- COVER -->
+<div class="cover">
+  <div style="font-size: 4em; margin-bottom: 20px;">📖</div>
+  <h1>آموزش جامع قابلیت‌ها</h1>
+  <div class="subtitle">
+    راهنمای دایرة‌المعارفی تمام کارکردهای OpenHuman + Hermes Agent + mcp-server-excel + Browser Use<br>
+    با ده‌ها مثال کد آماده اجرا و سناریوهای واقعی
+  </div>
+  <div class="badges">
+    <div class="badge">📚 ۱۰ فصل جامع</div>
+    <div class="badge">💻 ۸۰+ مثال کد</div>
+    <div class="badge">🎯 ۱۰۰+ قابلیت</div>
+    <div class="badge">🇮🇷 مثال‌های ایرانی</div>
+    <div class="badge">🧪 سناریوهای تست‌شده</div>
+  </div>
+  <div class="meta">نسخه ۱.۰ • Windows 10/11 • سطح: پیشرفته • ۱۴۰۵</div>
+</div>
+
+<!-- Executive Summary -->
+<h1>مقدمه: چگونه این سند را بخوانید</h1>
+
+<p>سند اول به شما نشان داد <em>چگونه</em> این چهار ابزار را نصب و به هم متصل کنید. این سند دوم به شما یاد می‌دهد <em>چه کارهایی</em> با آن‌ها می‌توانید انجام دهید. ما یک-به-یک تمام قابلیت‌های هر ابزار را با کد کامل، ورودی نمونه، خروجی نمونه و <span class="highlight">سناریوهای واقعی اداری ایرانی</span> پوشش می‌دهیم.</p>
+
+<div class="callout callout-tip">
+<strong>💡 توصیه استفاده</strong>
+این سند به‌صورت مرجع طراحی شده است. لازم نیست سرتاسر بخوانید. وقتی می‌خواهید کار خاصی انجام دهید (مثلاً «چطور یک PivotTable با فیلتر بسازم؟»)، از فهرست به بخش مربوطه بروید، کد را کپی کنید، متغیرها را متناسب با کار خود تغییر دهید و اجرا کنید.
+</div>
+
+<div class="callout callout-info">
+<strong>🎯 ساختار هر بخش</strong>
+هر قابلیت با این ساختار ارائه می‌شود:
+<ul style="margin-top: 5px;">
+  <li>📋 <strong>Function Signature:</strong> امضای دقیق تابع</li>
+  <li>📝 <strong>توضیح:</strong> این تابع چه کاری می‌کند</li>
+  <li>🧪 <strong>مثال ساده:</strong> کوچک‌ترین مثال قابل اجرا</li>
+  <li>🚀 <strong>مثال پیشرفته:</strong> استفاده در سناریوی واقعی</li>
+  <li>⚠️ <strong>نکات:</strong> اشتباهات رایج و راه‌حل‌ها</li>
+</ul>
+</div>
+
+<hr class="section-break">
+
+<!-- TOC -->
+<div class="toc">
+<h2>📚 فهرست مطالب</h2>
+<ol>
+  <li><a href="#p1">بخش اول: mcp-server-excel — دستکاری کامل اکسل</a>
+    <ol>
+      <li><a href="#e-workbook">مدیریت Workbook (۳ تابع)</a></li>
+      <li><a href="#e-data">خواندن و نوشتن داده (۲ تابع)</a></li>
+      <li><a href="#e-format">قالب‌بندی (۴ تابع)</a></li>
+      <li><a href="#e-formula">فرمول‌ها (۲ تابع)</a></li>
+      <li><a href="#e-chart">نمودارها (۶ نوع)</a></li>
+      <li><a href="#e-pivot">جداول محوری (PivotTable)</a></li>
+      <li><a href="#e-table">جداول رسمی Excel Table</a></li>
+      <li><a href="#e-sheet">مدیریت Worksheet (۳ تابع)</a></li>
+      <li><a href="#e-range">Range Operations (۴ تابع)</a></li>
+      <li><a href="#e-rowcol">مدیریت سطرها و ستون‌ها (۴ تابع)</a></li>
+    </ol>
+  </li>
+  <li><a href="#p2">بخش دوم: Browser Use — قابلیت‌های خودکارسازی مرورگر</a>
+    <ol>
+      <li><a href="#b-basic">پایه‌های Agent و LLM</a></li>
+      <li><a href="#b-browser">Browser و BrowserProfile</a></li>
+      <li><a href="#b-actions">اکشن‌های داخلی</a></li>
+      <li><a href="#b-custom">Custom Tools (Controller)</a></li>
+      <li><a href="#b-vision">Vision و OCR</a></li>
+      <li><a href="#b-auth">احراز هویت و Session</a></li>
+      <li><a href="#b-parallel">اجرای موازی چند Agent</a></li>
+      <li><a href="#b-sensitive">Sensitive Data</a></li>
+      <li><a href="#b-record">ضبط و بازپخش</a></li>
+    </ol>
+  </li>
+  <li><a href="#p3">بخش سوم: Hermes Agent — قابلیت‌های عامل</a>
+    <ol>
+      <li><a href="#h-chat">حالت‌های Chat و Session</a></li>
+      <li><a href="#h-skill">مدیریت Skill</a></li>
+      <li><a href="#h-memory">Three-Tier Memory</a></li>
+      <li><a href="#h-mcp-adv">پیکربندی MCP پیشرفته</a></li>
+      <li><a href="#h-gepa">GEPA و Skill Evolution</a></li>
+      <li><a href="#h-schedule">Scheduling و Cron</a></li>
+      <li><a href="#h-multi">Multi-Model Routing</a></li>
+    </ol>
+  </li>
+  <li><a href="#p4">بخش چهارم: OpenHuman — قابلیت‌های حافظه بلندمدت</a>
+    <ol>
+      <li><a href="#o-memtree">Memory Tree Navigation</a></li>
+      <li><a href="#o-workflow">tinyflows و tinyagents</a></li>
+      <li><a href="#o-integrations">OAuth Integrations</a></li>
+      <li><a href="#o-search">Semantic Search</a></li>
+      <li><a href="#o-schema">Schema Templates</a></li>
+    </ol>
+  </li>
+  <li><a href="#p5">بخش پنجم: سناریوهای ترکیبی End-to-End</a>
+    <ol>
+      <li><a href="#s-payroll">سناریو ۱: فیش حقوق کامل</a></li>
+      <li><a href="#s-tamin">سناریو ۲: ثبت لیست بیمه</a></li>
+      <li><a href="#s-tax">سناریو ۳: اظهارنامه فصلی</a></li>
+      <li><a href="#s-invoice">سناریو ۴: تولید فاکتور</a></li>
+      <li><a href="#s-reconcile">سناریو ۵: مغایرت‌گیری بانکی</a></li>
+      <li><a href="#s-report">سناریو ۶: گزارش مدیریتی هفتگی</a></li>
+      <li><a href="#s-dashboard">سناریو ۷: داشبورد KPI</a></li>
+      <li><a href="#s-email">سناریو ۸: ارسال ایمیل انبوه</a></li>
+      <li><a href="#s-nightly">سناریو ۹: پردازش شبانه خودکار</a></li>
+      <li><a href="#s-learn">سناریو ۱۰: یادگیری از خطا</a></li>
+    </ol>
+  </li>
+  <li><a href="#p6">بخش ششم: تکنیک‌های پیشرفته و بهترین شیوه‌ها</a>
+    <ol>
+      <li><a href="#a-error">مدیریت خطا و Retry</a></li>
+      <li><a href="#a-cost">بهینه‌سازی هزینه توکن</a></li>
+      <li><a href="#a-parallel">Parallelism</a></li>
+      <li><a href="#a-testing">تست و ارزیابی Skill</a></li>
+    </ol>
+  </li>
+</ol>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ PART 1: EXCEL MCP ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش اول</div>
+  <h1>mcp-server-excel — دستکاری کامل اکسل</h1>
+  <div class="chapter-desc">تمام ۲۰+ ابزار MCP اکسل با مثال‌های عملی</div>
+</div>
+
+<h2 id="e-workbook">۱.۱ مدیریت Workbook</h2>
+
+<h3>1️⃣ create_workbook</h3>
+
+<div class="func-sig">
+create_workbook(filepath: str) -> str
+</div>
+
+<p>یک فایل اکسل جدید در مسیر مشخص می‌سازد. اگر فایل از قبل وجود داشته باشد، خطا برمی‌گرداند.</p>
+
+<div class="example">
+<h4>مثال ۱: ساخت فایل ساده</h4>
+<pre><code># در Hermes chat:
+"یک فایل اکسل به نام 'فاکتور_۱۴۰۵_۰۴.xlsx' در D:\Office\Invoices بساز."
+
+# Hermes به‌طور خودکار فراخوانی می‌کند:
+create_workbook(filepath="D:/Office/Invoices/فاکتور_1405_04.xlsx")
+
+# خروجی:
+# "✅ Workbook created at D:/Office/Invoices/فاکتور_1405_04.xlsx"
+</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: ساخت مسیر داینامیک بر اساس تاریخ</h4>
+<pre><code>"هر روز یک فایل log جدید در D:\Office\Logs\ بساز با نام
+log_YYYYMMDD.xlsx بر اساس تاریخ امروز میلادی."
+
+# Hermes ابتدا تاریخ را می‌فهمد (2026-07-26)، سپس:
+create_workbook(filepath="D:/Office/Logs/log_20260726.xlsx")</code></pre>
+</div>
+
+<h3>2️⃣ create_worksheet</h3>
+
+<div class="func-sig">
+create_worksheet(filepath: str, sheet_name: str) -> str
+</div>
+
+<div class="example">
+<h4>مثال: ساخت چند sheet در یک فایل</h4>
+<pre><code># ساخت فایل با چند sheet برای گزارش سه‌ماهه:
+create_workbook("D:/Office/Q2_Report.xlsx")
+create_worksheet("D:/Office/Q2_Report.xlsx", "فروردین")
+create_worksheet("D:/Office/Q2_Report.xlsx", "اردیبهشت")
+create_worksheet("D:/Office/Q2_Report.xlsx", "خرداد")
+create_worksheet("D:/Office/Q2_Report.xlsx", "خلاصه")
+
+# نکته: sheet پیش‌فرض 'Sheet' هم می‌ماند مگر اینکه delete_worksheet را صدا بزنیم</code></pre>
+</div>
+
+<h3>3️⃣ get_workbook_metadata</h3>
+
+<div class="func-sig">
+get_workbook_metadata(filepath: str, include_ranges: bool = False) -> str
+</div>
+
+<p>اطلاعات فایل را برمی‌گرداند: sheet ها، تعداد سطر/ستون، نام range های نامگذاری شده.</p>
+
+<div class="example">
+<h4>مثال: بررسی ساختار یک فایل ناآشنا</h4>
+<pre><code># قبل از دستکاری یک فایل که مشتری فرستاده:
+metadata = get_workbook_metadata(
+    filepath="D:/Downloads/received.xlsx",
+    include_ranges=True
+)
+
+# خروجی نمونه:
+# {
+#   "sheets": [
+#     {"name": "Sales", "rows": 250, "cols": 8},
+#     {"name": "Expenses", "rows": 89, "cols": 5}
+#   ],
+#   "named_ranges": [
+#     {"name": "TotalSales", "range": "Sales!I250"}
+#   ]
+# }</code></pre>
+</div>
+
+<h2 id="e-data">۱.۲ خواندن و نوشتن داده</h2>
+
+<h3>4️⃣ write_data_to_excel</h3>
+
+<div class="func-sig">
+write_data_to_excel(filepath: str, sheet_name: str,
+                    data: List[Dict], start_cell: str = "A1") -> str
+</div>
+
+<p>لیست دیکشنری‌ها را در sheet می‌نویسد. کلیدهای دیکشنری اول به‌عنوان هدر ستون‌ها استفاده می‌شود.</p>
+
+<div class="example">
+<h4>مثال ۱: نوشتن جدول کارمندان</h4>
+<pre><code>employees = [
+    {"نام": "علی احمدی", "کد ملی": "0012345678",
+     "پایه": 150000000, "سمت": "حسابدار"},
+    {"نام": "سارا رضایی", "کد ملی": "0087654321",
+     "پایه": 180000000, "سمت": "مدیر مالی"},
+    {"نام": "محمد کریمی", "کد ملی": "0055443322",
+     "پایه": 120000000, "سمت": "کارمند اداری"},
+]
+
+write_data_to_excel(
+    filepath="D:/Office/Excel/employees.xlsx",
+    sheet_name="لیست",
+    data=employees,
+    start_cell="A1"
+)
+
+# نتیجه:
+# A1: نام | B1: کد ملی | C1: پایه | D1: سمت
+# A2: علی احمدی | B2: 0012345678 | ...</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: افزودن به داده موجود از سطر خاص</h4>
+<pre><code># اضافه کردن کارمند جدید در سطر ۱۵:
+write_data_to_excel(
+    filepath="D:/Office/Excel/employees.xlsx",
+    sheet_name="لیست",
+    data=[{"نام": "زهرا موسوی", "کد ملی": "0099887766",
+           "پایه": 140000000, "سمت": "طراح"}],
+    start_cell="A15"
+)</code></pre>
+</div>
+
+<div class="callout callout-warning">
+<strong>⚠️ نکته دربارهٔ کد ملی</strong>
+اگر کد ملی با صفر شروع می‌شود، اکسل به‌طور خودکار صفر ابتدا را حذف می‌کند. راه‌حل: قبل از نوشتن، format_range را با <code>number_format="@"</code> اعمال کنید تا ستون به‌صورت متن ذخیره شود.
+</div>
+
+<h3>5️⃣ read_data_from_excel</h3>
+
+<div class="func-sig">
+read_data_from_excel(filepath: str, sheet_name: str,
+                     start_cell: str = "A1", end_cell: str = None,
+                     preview_only: bool = False) -> str
+</div>
+
+<div class="example">
+<h4>مثال ۱: خواندن کل sheet</h4>
+<pre><code>data = read_data_from_excel(
+    filepath="D:/Office/Excel/employees.xlsx",
+    sheet_name="لیست"
+)
+# خروجی: JSON از تمام سطرها</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: خواندن رنج مشخص و preview</h4>
+<pre><code># فقط ۵ سطر اول برای بررسی سریع ساختار:
+preview = read_data_from_excel(
+    filepath="D:/Office/Excel/big_file.xlsx",
+    sheet_name="Data",
+    start_cell="A1",
+    end_cell="H6",
+    preview_only=True
+)</code></pre>
+</div>
+
+<h2 id="e-format">۱.۳ قالب‌بندی</h2>
+
+<h3>6️⃣ format_range — قدرتمندترین تابع قالب‌بندی</h3>
+
+<div class="func-sig">
+format_range(filepath, sheet_name, start_cell, end_cell=None,
+             bold=False, italic=False, underline=False,
+             font_size=None, font_color=None, bg_color=None,
+             border_style=None, border_color=None,
+             number_format=None, alignment=None, wrap_text=False,
+             merge_cells=False, protection={}, conditional_format={})
+</div>
+
+<div class="example">
+<h4>مثال ۱: قالب‌بندی هدر جدول</h4>
+<pre><code>format_range(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    start_cell="A1", end_cell="H1",
+    bold=True,
+    font_size=12,
+    font_color="#FFFFFF",
+    bg_color="#1e3a8a",
+    alignment="center",
+    border_style="medium",
+    border_color="#000000"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: فرمت اعداد فارسی و ارز ریالی</h4>
+<pre><code># ستون حقوق‌ها با جداکننده هزار و پسوند ریال:
+format_range(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    start_cell="C2", end_cell="C51",
+    number_format='#,##0" ریال"',
+    alignment="left"
+)
+
+# ستون تاریخ:
+format_range(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    start_cell="I2", end_cell="I51",
+    number_format="yyyy/mm/dd"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۳: Conditional Formatting برای بولد کردن حقوق‌های بالا</h4>
+<pre><code>format_range(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    start_cell="C2", end_cell="C51",
+    conditional_format={
+        "type": "cell",
+        "operator": "greaterThan",
+        "value": 300000000,
+        "format": {"bold": True, "bg_color": "#fee2e2"}
+    }
+)
+
+# Data Bar برای نمایش گرافیکی مبالغ:
+format_range(
+    ...,
+    conditional_format={
+        "type": "data_bar",
+        "color": "#10b981"
+    }
+)
+
+# Color Scale برای heatmap:
+format_range(
+    ...,
+    conditional_format={
+        "type": "color_scale",
+        "min_color": "#ffffff",
+        "mid_color": "#fef3c7",
+        "max_color": "#dc2626"
+    }
+)</code></pre>
+</div>
+
+<h3>7️⃣ merge_cells & 8️⃣ unmerge_cells & 9️⃣ get_merged_cells</h3>
+
+<div class="example">
+<h4>مثال: ساخت هدر چند-سلولی برای گزارش</h4>
+<pre><code># ادغام A1:H1 برای عنوان اصلی
+merge_cells(
+    filepath="D:/Office/Excel/report.xlsx",
+    sheet_name="Q2",
+    start_cell="A1", end_cell="H1"
+)
+
+format_range(
+    filepath="D:/Office/Excel/report.xlsx",
+    sheet_name="Q2",
+    start_cell="A1", end_cell="H1",
+    font_size=18, bold=True,
+    alignment="center",
+    bg_color="#065f46", font_color="#FFFFFF"
+)
+
+# سپس هدر ستون‌ها:
+merge_cells("D:/...", "Q2", "A2", "A3")  # ادغام عمودی ستون A</code></pre>
+</div>
+
+<h2 id="e-formula">۱.۴ فرمول‌ها</h2>
+
+<h3>🔟 apply_formula</h3>
+
+<div class="func-sig">
+apply_formula(filepath, sheet_name, cell, formula) -> str
+</div>
+
+<div class="example">
+<h4>مثال ۱: فرمول‌های اساسی</h4>
+<pre><code># جمع ساده
+apply_formula("D:/Office/Excel/sales.xlsx", "Sheet1",
+              "D10", "=SUM(D2:D9)")
+
+# میانگین وزنی
+apply_formula(..., "F1",
+              "=SUMPRODUCT(B2:B100, C2:C100)/SUM(B2:B100)")
+
+# پیدا کردن حداکثر با شرط
+apply_formula(..., "G1",
+              "=MAXIFS(D2:D100, C2:C100, \"فروش\")")</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: فرمول مالیات پلکانی ایران ۱۴۰۵</h4>
+<pre><code># محاسبه مالیات حقوق پلکانی برای سلول E2 (ناخالص):
+formula = """=IF(E2<=200000000,0,
+           IF(E2<=400000000,(E2-200000000)*0.1,
+           IF(E2<=600000000,20000000+(E2-400000000)*0.15,
+           IF(E2<=800000000,50000000+(E2-600000000)*0.2,
+           90000000+(E2-800000000)*0.25))))"""
+
+apply_formula(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    cell="F2",
+    formula=formula
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۳: VLOOKUP برای اطلاعات بیمه</h4>
+<pre><code># در sheet "بیمه" یک جدول با شماره بیمه و درصد داریم
+# در sheet "فیش‌ها" برای هر کارمند درصد بیمه را استخراج می‌کنیم:
+
+apply_formula(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    cell="H2",
+    formula='=VLOOKUP(B2, بیمه!A:C, 3, FALSE) * E2'
+)</code></pre>
+</div>
+
+<h3>1️⃣1️⃣ validate_formula_syntax</h3>
+
+<p>قبل از اجرا، صحت syntactic فرمول را چک می‌کند بدون اینکه آن را واقعاً اعمال کند.</p>
+
+<div class="example">
+<h4>مثال: تست چند فرمول</h4>
+<pre><code>for formula in candidate_formulas:
+    result = validate_formula_syntax(
+        filepath="D:/test.xlsx",
+        sheet_name="Sheet1",
+        cell="A1",
+        formula=formula
+    )
+    if "error" in result:
+        print(f"❌ {formula} → {result['error']}")
+    else:
+        print(f"✅ {formula}")</code></pre>
+</div>
+
+<h2 id="e-chart">۱.۵ نمودارها</h2>
+
+<h3>1️⃣2️⃣ create_chart</h3>
+
+<div class="func-sig">
+create_chart(filepath, sheet_name, data_range, chart_type,
+             target_cell, title="", x_axis="", y_axis="") -> str
+</div>
+
+<p>انواع پشتیبانی‌شده: <span class="tag">line</span> <span class="tag">bar</span> <span class="tag">pie</span> <span class="tag">scatter</span> <span class="tag">area</span> <span class="tag">column</span></p>
+
+<div class="example">
+<h4>مثال ۱: نمودار میله‌ای فروش ماهانه</h4>
+<pre><code>create_chart(
+    filepath="D:/Office/Excel/sales.xlsx",
+    sheet_name="ماهانه",
+    data_range="A1:B13",  # A: ماه، B: فروش
+    chart_type="bar",
+    target_cell="D2",
+    title="فروش ماهانه ۱۴۰۵",
+    x_axis="ماه",
+    y_axis="ریال"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: نمودار دایره‌ای توزیع هزینه‌ها</h4>
+<pre><code>create_chart(
+    filepath="D:/Office/Excel/budget.xlsx",
+    sheet_name="بودجه",
+    data_range="A1:B8",  # A: عنوان هزینه، B: مبلغ
+    chart_type="pie",
+    target_cell="D1",
+    title="سهم هر بخش از بودجه"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۳: مقایسه سری زمانی حقوق چند سال</h4>
+<pre><code># ابتدا داده را می‌نویسیم:
+write_data_to_excel(
+    filepath="D:/Office/Excel/history.xlsx",
+    sheet_name="روند",
+    data=[
+        {"ماه": "فروردین", "1403": 100, "1404": 120, "1405": 145},
+        {"ماه": "اردیبهشت", "1403": 105, "1404": 125, "1405": 152},
+        # ...
+    ]
+)
+
+# نمودار خطی:
+create_chart(
+    filepath="D:/Office/Excel/history.xlsx",
+    sheet_name="روند",
+    data_range="A1:D13",
+    chart_type="line",
+    target_cell="F1",
+    title="روند حقوق ماهانه ۳ سال گذشته",
+    x_axis="ماه", y_axis="میلیون ریال"
+)</code></pre>
+</div>
+
+<h2 id="e-pivot">۱.۶ جداول محوری (PivotTable)</h2>
+
+<h3>1️⃣3️⃣ create_pivot_table</h3>
+
+<div class="func-sig">
+create_pivot_table(filepath, sheet_name, data_range, target_cell,
+                   rows: List[str], values: List[str],
+                   columns: List[str] = None,
+                   agg_func: str = "mean") -> str
+</div>
+
+<p>تجمیع (agg_func): <span class="tag">sum</span> <span class="tag">count</span> <span class="tag">mean</span> <span class="tag">max</span> <span class="tag">min</span></p>
+
+<div class="example">
+<h4>مثال ۱: خلاصه فروش بر اساس فروشنده و ماه</h4>
+<pre><code># فرض کنید Data range A1:E1000 دارای:
+# ستون A: تاریخ، B: فروشنده، C: محصول، D: تعداد، E: مبلغ
+
+create_pivot_table(
+    filepath="D:/Office/Excel/sales.xlsx",
+    sheet_name="خام",
+    data_range="A1:E1000",
+    target_cell="G1",
+    rows=["فروشنده"],           # هر ردیف یک فروشنده
+    columns=["ماه"],             # هر ستون یک ماه
+    values=["مبلغ"],             # مقدار جمع فروش
+    agg_func="sum"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: تعداد فاکتور به تفکیک استان</h4>
+<pre><code>create_pivot_table(
+    filepath="D:/Office/Excel/invoices.xlsx",
+    sheet_name="فاکتورها",
+    data_range="A1:H2000",
+    target_cell="J1",
+    rows=["استان"],
+    values=["شماره_فاکتور"],
+    agg_func="count"
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۳: میانگین حقوق به تفکیک سمت و بخش</h4>
+<pre><code>create_pivot_table(
+    filepath="D:/Office/Excel/hr.xlsx",
+    sheet_name="کارمندان",
+    data_range="A1:H500",
+    target_cell="J1",
+    rows=["سمت", "بخش"],
+    values=["پایه_حقوق"],
+    agg_func="mean"
+)</code></pre>
+</div>
+
+<h2 id="e-table">۱.۷ جداول رسمی Excel Table</h2>
+
+<h3>1️⃣4️⃣ create_table</h3>
+
+<p>یک range را به Excel Table تبدیل می‌کند که فایده‌های زیادی دارد: مرتب‌سازی/فیلتر خودکار، فرمول‌های ساختاری، استایل پیش‌ساخته.</p>
+
+<div class="example">
+<h4>مثال: تبدیل range کارمندان به Table</h4>
+<pre><code>create_table(
+    filepath="D:/Office/Excel/hr.xlsx",
+    sheet_name="کارمندان",
+    data_range="A1:H51",
+    table_name="tblEmployees",
+    table_style="TableStyleMedium9"
+)
+
+# استایل‌های موجود:
+# TableStyleLight1..21
+# TableStyleMedium1..28
+# TableStyleDark1..11
+
+# فرمول‌های ساختاری قابل استفاده:
+apply_formula(..., cell="K1",
+    formula="=SUM(tblEmployees[پایه_حقوق])")
+
+apply_formula(..., cell="K2",
+    formula='=COUNTIF(tblEmployees[سمت], "مدیر")')</code></pre>
+</div>
+
+<h2 id="e-sheet">۱.۸ مدیریت Worksheet</h2>
+
+<h3>1️⃣5️⃣ copy_worksheet & 1️⃣6️⃣ delete_worksheet & 1️⃣7️⃣ rename_worksheet</h3>
+
+<div class="example">
+<h4>مثال: ساخت template و کپی آن برای هر ماه</h4>
+<pre><code># یک template اولیه بساز
+create_worksheet("D:/Office/Excel/y1405.xlsx", "Template")
+# ... قالب‌بندی template را انجام دهید
+
+# سپس برای ۱۲ ماه:
+months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد",
+          "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
+
+for month in months:
+    copy_worksheet(
+        filepath="D:/Office/Excel/y1405.xlsx",
+        source_sheet="Template",
+        target_sheet=month
+    )
+
+# در پایان template را پاک کن:
+delete_worksheet("D:/Office/Excel/y1405.xlsx", "Template")</code></pre>
+</div>
+
+<h2 id="e-range">۱.۹ Range Operations</h2>
+
+<h3>1️⃣8️⃣ copy_range & 1️⃣9️⃣ delete_range & 2️⃣0️⃣ validate_excel_range</h3>
+
+<div class="example">
+<h4>مثال: انتقال ستون بین sheet ها</h4>
+<pre><code># کپی اطلاعات کارمندان فعلی به sheet آرشیو:
+copy_range(
+    filepath="D:/Office/Excel/hr.xlsx",
+    sheet_name="فعلی",
+    source_start="A2", source_end="H51",
+    target_start="A100",
+    target_sheet="آرشیو"
+)
+
+# سپس حذف از sheet فعلی:
+delete_range(
+    filepath="D:/Office/Excel/hr.xlsx",
+    sheet_name="فعلی",
+    start_cell="A2", end_cell="H51",
+    shift_direction="up"
+)</code></pre>
+</div>
+
+<h2 id="e-rowcol">۱.۱۰ مدیریت سطرها و ستون‌ها</h2>
+
+<h3>2️⃣1️⃣ insert_rows & 2️⃣2️⃣ insert_columns & 2️⃣3️⃣ delete_sheet_rows & 2️⃣4️⃣ delete_sheet_columns</h3>
+
+<div class="example">
+<h4>مثال: افزودن ستون‌های جدید به وسط جدول</h4>
+<pre><code># در جدول موجود، بین ستون D (پایه) و E (اضافه‌کار)
+# دو ستون جدید (مسکن، خواروبار) اضافه کنیم:
+insert_columns(
+    filepath="D:/Office/Excel/payroll.xlsx",
+    sheet_name="فیش‌ها",
+    start_col=5,   # ستون E
+    count=2
+)
+
+# حالا مقادیر جدید را بنویس:
+write_data_to_excel(
+    ...,
+    data=[{"مسکن": 5000000, "خواروبار": 3000000}, ...],
+    start_cell="E2"
+)</code></pre>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ PART 2: BROWSER USE ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش دوم</div>
+  <h1>Browser Use — قابلیت‌های خودکارسازی مرورگر</h1>
+  <div class="chapter-desc">از یک Agent ساده تا Custom Tools پیشرفته</div>
+</div>
+
+<h2 id="b-basic">۲.۱ پایه‌های Agent و LLM</h2>
+
+<h3>Hello World</h3>
+
+<pre><code>import asyncio
+from browser_use import Agent, ChatBrowserUse
+
+async def hello():
+    agent = Agent(
+        task="به Google برو و 'قیمت طلای امروز ایران' را جست‌وجو کن",
+        llm=ChatBrowserUse(model='openai/gpt-4.1')
+    )
+    result = await agent.run()
+    print(result.final_result())
+
+asyncio.run(hello())</code></pre>
+
+<h3>اتصال به LLMهای مختلف</h3>
+
+<div class="example">
+<h4>مثال: انواع اتصال</h4>
+<pre><code># 1. Browser Use SDK (ساده‌ترین)
+from browser_use import ChatBrowserUse
+llm = ChatBrowserUse(model='anthropic/claude-sonnet-4-6')
+# فقط یک BROWSER_USE_API_KEY نیاز است
+
+# 2. OpenAI مستقیم
+from browser_use.llm import ChatOpenAI
+llm = ChatOpenAI(model='gpt-4.1', api_key='sk-proj-xxx')
+
+# 3. Anthropic مستقیم
+from browser_use.llm import ChatAnthropic
+llm = ChatAnthropic(model='claude-sonnet-4-5')
+
+# 4. Ollama محلی
+from browser_use.llm import ChatOllama
+llm = ChatOllama(
+    model='qwen2.5vl:7b',  # مدل vision-capable
+    base_url='http://localhost:11434'
+)
+
+# 5. Google Gemini
+from browser_use.llm import ChatGoogle
+llm = ChatGoogle(model='gemini-2.0-flash')</code></pre>
+</div>
+
+<h3>پارامترهای پیشرفته Agent</h3>
+
+<div class="example">
+<h4>مثال: تنظیمات کامل</h4>
+<pre><code>agent = Agent(
+    task="در tamin.ir لیست کارمندان را دانلود کن",
+    llm=llm,
+    max_steps=30,                # حداکثر گام
+    max_actions_per_step=3,      # حداکثر action در هر step
+    use_vision=True,             # استفاده از قابلیت دید مدل
+    save_conversation_path="D:/Office/logs/tamin_session.json",
+    generate_gif=True,           # ضبط GIF از فرآیند
+    max_failures=3,              # تلاش مجدد در صورت خطا
+    retry_delay=5,               # ثانیه
+    validate_output=True,        # ولیدیشن خروجی نهایی
+)</code></pre>
+</div>
+
+<h2 id="b-browser">۲.۲ Browser و BrowserProfile</h2>
+
+<div class="example">
+<h4>مثال: پیکربندی حرفه‌ای Browser</h4>
+<pre><code>from browser_use import Browser, BrowserProfile
+
+profile = BrowserProfile(
+    # مسیر پروفایل
+    user_data_dir=r"D:\Office\browser_profile_agent",
+    profile_directory="Default",
+
+    # حالت‌ها
+    headless=False,           # False برای دیدن، True برای سرور
+    stealth=True,             # فعال‌سازی anti-detection
+
+    # ابعاد و resolution
+    viewport={"width": 1920, "height": 1080},
+
+    # زبان و region
+    locale="fa-IR",
+    timezone_id="Asia/Tehran",
+    geolocation={"latitude": 35.6892, "longitude": 51.3890},
+
+    # User-Agent سفارشی
+    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/...",
+
+    # Proxy (اگر لازم است)
+    proxy={
+        "server": "http://proxy.example.com:8080",
+        "username": "user",
+        "password": "pass"
+    },
+
+    # Cookies و storage از پیش
+    storage_state="D:/Office/tamin_cookies.json",
+
+    # فایل‌های download
+    downloads_path="D:/Office/downloads",
+
+    # اجازه دسترسی به clipboard، microphone، ...
+    permissions=["clipboard-read", "clipboard-write"],
+
+    # timeout
+    default_timeout=30000,      # 30 ثانیه
+    navigation_timeout=60000,
+)
+
+browser = Browser(profile=profile)
+agent = Agent(task="...", llm=llm, browser=browser)</code></pre>
+</div>
+
+<h2 id="b-actions">۲.۳ اکشن‌های داخلی</h2>
+
+<p>Browser Use به‌طور خودکار اکشن‌های زیر را برای LLM فراهم می‌کند:</p>
+
+<table>
+<tr><th>اکشن</th><th>توضیح</th><th>پارامترها</th></tr>
+<tr><td><code>navigate</code></td><td>رفتن به URL</td><td>url</td></tr>
+<tr><td><code>click</code></td><td>کلیک روی عنصر</td><td>index (شماره عنصر highlighted)</td></tr>
+<tr><td><code>type</code></td><td>تایپ متن</td><td>index, text</td></tr>
+<tr><td><code>select</code></td><td>انتخاب از dropdown</td><td>index, option</td></tr>
+<tr><td><code>scroll</code></td><td>اسکرول صفحه</td><td>direction (up/down), amount</td></tr>
+<tr><td><code>screenshot</code></td><td>گرفتن screenshot</td><td>filename</td></tr>
+<tr><td><code>wait</code></td><td>صبر برای یک event</td><td>selector or seconds</td></tr>
+<tr><td><code>extract_content</code></td><td>استخراج متن از صفحه</td><td>goal</td></tr>
+<tr><td><code>go_back</code></td><td>برگشت به صفحه قبل</td><td>-</td></tr>
+<tr><td><code>switch_tab</code></td><td>تعویض tab</td><td>tab_index</td></tr>
+<tr><td><code>close_tab</code></td><td>بستن tab</td><td>tab_index</td></tr>
+<tr><td><code>drag_and_drop</code></td><td>drag & drop</td><td>from_index, to_index</td></tr>
+<tr><td><code>upload_file</code></td><td>آپلود فایل</td><td>index, filepath</td></tr>
+<tr><td><code>press_key</code></td><td>فشردن کلید</td><td>key (e.g. Enter, Escape)</td></tr>
+<tr><td><code>done</code></td><td>پایان کار</td><td>text (نتیجه نهایی)</td></tr>
+</table>
+
+<h2 id="b-custom">۲.۴ Custom Tools (Controller)</h2>
+
+<p>می‌توانید اکشن‌های سفارشی خود را ثبت کنید که Browser Use در کنار اکشن‌های داخلی به LLM ارائه می‌دهد.</p>
+
+<div class="example">
+<h4>مثال ۱: ثبت اکشن «حل CAPTCHA فارسی»</h4>
+<pre><code>from browser_use import Controller, ActionResult
+from playwright.async_api import Page
+
+controller = Controller()
+
+@controller.action("خواندن CAPTCHA متنی فارسی از تصویر با ID مشخص")
+async def read_persian_captcha(image_id: str, page: Page) -> ActionResult:
+    """CAPTCHA فارسی را با استفاده از OCR محلی می‌خواند."""
+    element = await page.query_selector(f"#{image_id}")
+    img_bytes = await element.screenshot()
+
+    # فراخوانی مدل vision محلی
+    import ollama
+    response = ollama.chat(
+        model='qwen2.5vl:7b',
+        messages=[{
+            'role': 'user',
+            'content': 'این CAPTCHA فارسی را دقیقاً بخوان. فقط متن را برگردان.',
+            'images': [img_bytes]
+        }]
+    )
+    captcha_text = response['message']['content'].strip()
+
+    return ActionResult(
+        extracted_content=captcha_text,
+        include_in_memory=True
+    )
+
+# استفاده:
+agent = Agent(
+    task="در tamin.ir لاگین کن. اگر CAPTCHA بود از read_persian_captcha استفاده کن",
+    llm=llm,
+    controller=controller
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۲: اکشن «کپی داده جدول به اکسل»</h4>
+<pre><code>@controller.action("استخراج جدول HTML و ذخیره در فایل اکسل")
+async def extract_table_to_excel(
+    table_selector: str,
+    output_path: str,
+    page: Page
+) -> ActionResult:
+    """جدول HTML را می‌خواند و در xlsx ذخیره می‌کند."""
+    rows = await page.query_selector_all(f"{table_selector} tr")
+    data = []
+    headers = []
+
+    for i, row in enumerate(rows):
+        cells = await row.query_selector_all("td, th")
+        row_data = [await c.inner_text() for c in cells]
+        if i == 0:
+            headers = row_data
+        else:
+            data.append(dict(zip(headers, row_data)))
+
+    # فراخوانی MCP Excel
+    import subprocess, json
+    subprocess.run([
+        "uvx", "excel-mcp-server", "call", "write_data_to_excel",
+        json.dumps({
+            "filepath": output_path,
+            "sheet_name": "Extracted",
+            "data": data
+        })
+    ])
+
+    return ActionResult(
+        extracted_content=f"استخراج شد: {len(data)} سطر → {output_path}",
+        include_in_memory=True
+    )</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال ۳: اکشن «تعلیق و پرسش از کاربر»</h4>
+<pre><code>import asyncio
+
+@controller.action("مکث و پرسش سؤال از کاربر انسان")
+async def ask_human(question: str) -> ActionResult:
+    """کار را متوقف کرده و از انسان می‌پرسد."""
+    # پیام به کاربر
+    print(f"\n\n🤔 عامل سؤال دارد: {question}\n")
+    answer = input("پاسخ شما: ")
+
+    return ActionResult(
+        extracted_content=answer,
+        include_in_memory=True
+    )
+
+# در task:
+agent = Agent(
+    task="""در tax.gov.ir لاگین کن. اگر OTP خواستی،
+             از ask_human استفاده کن و OTP را بگیر""",
+    ...
+)</code></pre>
+</div>
+
+<h2 id="b-vision">۲.۵ Vision و OCR</h2>
+
+<p>Browser Use به‌طور پیش‌فرض screenshot می‌گیرد و به LLM vision-capable می‌دهد. این یعنی مدل می‌تواند دقیقاً ببیند صفحه چه شکلی است و کجا کلیک کند.</p>
+
+<div class="example">
+<h4>مثال: کار با صفحه‌ای که DOM آن دستکاری شده (مثل tax.gov.ir)</h4>
+<pre><code># برخی سامانه‌های ایرانی از canvas یا SVG استفاده می‌کنند
+# که selector معمول کار نمی‌کند. Vision کمک می‌کند:
+
+agent = Agent(
+    task="""
+    به eservices.tamin.ir برو.
+    از تصویر صفحه بفهم دکمه 'ارسال لیست' کجاست
+    (رنگ سبز، در پایین صفحه).
+    روی آن کلیک کن.
+    """,
+    llm=ChatOpenAI(model='gpt-4.1'),  # vision-capable
+    use_vision=True,
+    max_actions_per_step=2,
+)</code></pre>
+</div>
+
+<h2 id="b-auth">۲.۶ احراز هویت و Session</h2>
+
+<div class="example">
+<h4>مثال: ذخیره و بارگذاری session</h4>
+<pre><code># اولین بار: دستی لاگین کن و session را ذخیره کن
+from browser_use import Browser, BrowserProfile
+
+profile = BrowserProfile(
+    user_data_dir=r"D:\Office\browser_profile_agent",
+    headless=False
+)
+browser = Browser(profile=profile)
+
+# اجرا کن، خودت لاگین کن، cookies در پروفایل ذخیره می‌شود
+
+# دفعات بعد:
+agent = Agent(
+    task="مستقیم به eservices.tamin.ir/dashboard برو (لاگین شده‌ام)",
+    llm=llm,
+    browser=Browser(profile=profile)  # همان پروفایل
+)</code></pre>
+</div>
+
+<div class="example">
+<h4>مثال: انتقال session از Chrome شخصی</h4>
+<pre><code># اگر روی مرورگر شخصی خودتان به سامانه‌ای لاگین کرده‌اید:
+profile = BrowserProfile(
+    user_data_dir=r"C:\Users\YourName\AppData\Local\Google\Chrome\User Data",
+    profile_directory="Default",
+    channel="chrome",  # به‌جای chromium واقعی از Chrome خود شما
+    headless=False
+)
+
+# ⚠️ قبل اجرا Chrome را کاملاً ببندید</code></pre>
+</div>
+
+<h2 id="b-parallel">۲.۷ اجرای موازی چند Agent</h2>
+
+<div class="example">
+<h4>مثال: بررسی موازی چند سامانه</h4>
+<pre><code>import asyncio
+
+async def check_tamin():
+    agent = Agent(
+        task="در eservices.tamin.ir وارد شو و ببین آخرین لیست
+              ارسالی چه تاریخی بوده",
+        llm=llm,
+        browser=Browser(profile=BrowserProfile(
+            user_data_dir=r"D:\Office\profiles\tamin"
+        ))
+    )
+    return await agent.run()
+
+async def check_tax():
+    agent = Agent(
+        task="در tax.gov.ir لاگین کن و اظهارنامه‌های ارسال‌نشده را لیست کن",
+        llm=llm,
+        browser=Browser(profile=BrowserProfile(
+            user_data_dir=r"D:\Office\profiles\tax"
+        ))
+    )
+    return await agent.run()
+
+async def check_bank():
+    agent = Agent(
+        task="در بانک‌آنلاین موجودی حساب شرکت را چاپ کن",
+        llm=llm,
+        browser=Browser(profile=BrowserProfile(
+            user_data_dir=r"D:\Office\profiles\bank"
+        ))
+    )
+    return await agent.run()
+
+# اجرای موازی — سه مرورگر با پروفایل جداگانه:
+async def main():
+    results = await asyncio.gather(
+        check_tamin(), check_tax(), check_bank()
+    )
+    print("همه وضعیت‌ها:", results)
+
+asyncio.run(main())</code></pre>
+</div>
+
+<h2 id="b-sensitive">۲.۸ Sensitive Data</h2>
+
+<div class="example">
+<h4>مثال: پنهان کردن رمز از context LLM</h4>
+<pre><code># اگر رمز عبور را مستقیم در task بگذارید، به LLM ارسال می‌شود
+# راه امن — استفاده از sensitive_data:
+
+agent = Agent(
+    task="""در tamin.ir با username={user} و password={pwd} لاگین کن.
+            سپس کد ملی 0012345678 را جست‌وجو کن.""",
+    llm=llm,
+    sensitive_data={
+        "user": "12345678",       # کد اقتصادی
+        "pwd": "MySecretPass123"  # رمز
+    }
+)
+
+# مقادیر واقعی در مرورگر تایپ می‌شوند اما به LLM
+# فقط placeholder ها ({user}, {pwd}) فرستاده می‌شوند</code></pre>
+</div>
+
+<h2 id="b-record">۲.۹ ضبط و بازپخش</h2>
+
+<div class="example">
+<h4>مثال: ضبط برای debug و بازپخش</h4>
+<pre><code>agent = Agent(
+    task="...",
+    llm=llm,
+    save_conversation_path="D:/Office/recordings/session_001.json",
+    generate_gif="D:/Office/recordings/session_001.gif",
+    save_playwright_trace=True,  # trace فایل .zip
+)
+
+# بعد از اجرا:
+# - session_001.json: تاریخچه گفتگو با LLM
+# - session_001.gif: انیمیشن مرورگر
+# - trace.zip: قابل بازپخش در Playwright Inspector</code></pre>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ PART 3: HERMES ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش سوم</div>
+  <h1>Hermes Agent — قابلیت‌های عامل</h1>
+  <div class="chapter-desc">Learning Loop، Skills، Multi-Model Routing</div>
+</div>
+
+<h2 id="h-chat">۳.۱ حالت‌های Chat و Session</h2>
+
+<h3>حالت‌های اجرا</h3>
+
+<table>
+<tr><th>دستور</th><th>کاربرد</th></tr>
+<tr><td><code>hermes chat</code></td><td>گفتگوی تعاملی پیش‌فرض</td></tr>
+<tr><td><code>hermes run "task"</code></td><td>اجرای یک‌باره یک task</td></tr>
+<tr><td><code>hermes serve</code></td><td>اجرای Hermes به‌عنوان HTTP API</td></tr>
+<tr><td><code>hermes chat --model gpt-4.1</code></td><td>Override مدل موقت</td></tr>
+<tr><td><code>hermes chat --session mysession</code></td><td>ادامه یک session قبلی</td></tr>
+<tr><td><code>hermes sessions</code></td><td>لیست session ها</td></tr>
+</table>
+
+<div class="example">
+<h4>مثال: session نامگذاری‌شده برای هر پروژه</h4>
+<pre><code># شروع session "حقوق-مرداد-1405":
+hermes chat --session payroll-mordad-1405
+
+# در آینده هر وقت روی این پروژه کار می‌کنید:
+hermes chat --session payroll-mordad-1405
+# → Hermes همه context قبلی را برمی‌دارد</code></pre>
+</div>
+
+<h2 id="h-skill">۳.۲ مدیریت Skill</h2>
+
+<h3>دستورات Skill</h3>
+
+<pre><code>hermes skill list                    # لیست همه Skill ها
+hermes skill new &lt;name&gt;              # ساخت Skill جدید
+hermes skill edit &lt;name&gt;             # ویرایش
+hermes skill delete &lt;name&gt;           # حذف
+hermes skill show &lt;name&gt;             # نمایش محتوا
+hermes skill export &lt;name&gt; &lt;path&gt;    # صادرات به فایل
+hermes skill import &lt;path&gt;           # وارد کردن Skill دیگران
+hermes skill test &lt;name&gt;             # تست</code></pre>
+
+<div class="example">
+<h4>مثال: ساخت یک Skill حرفه‌ای</h4>
+<pre><code>hermes skill new bank-reconciliation
+
+# ویرایشگر باز می‌شود، این را بنویسید:</code></pre>
+
+<pre><code>---
+name: bank-reconciliation
+description: مغایرت‌گیری صورت‌حساب بانکی با دفاتر داخلی
+triggers:
+  - "مغایرت بانک"
+  - "reconciliation"
+  - "تطبیق حساب"
+inputs:
+  bank_statement_path:
+    type: file
+    description: مسیر فایل صورت‌حساب بانک (xlsx یا csv)
+  ledger_path:
+    type: file
+    description: مسیر دفتر حساب داخلی
+outputs:
+  discrepancy_report_path:
+    type: file
+tags:
+  - accounting
+  - finance
+  - iranian-office
+---
+
+# مغایرت‌گیری بانکی
+
+## گام ۱: خواندن هر دو فایل
+```
+bank = excel.read_data_from_excel(
+    filepath="${bank_statement_path}",
+    sheet_name="Statement"
+)
+ledger = excel.read_data_from_excel(
+    filepath="${ledger_path}",
+    sheet_name="Ledger"
+)
+```
+
+## گام ۲: تطبیق بر اساس مبلغ و تاریخ
+برای هر تراکنش در ledger:
+  1. تراکنش با همان مبلغ و همان تاریخ (±۳ روز) در bank پیدا کن
+  2. اگر پیدا شد: تیک matched
+  3. اگر پیدا نشد: به لیست discrepancies اضافه کن
+
+## گام ۳: تولید گزارش مغایرت
+```
+excel.create_workbook(filepath="${discrepancy_report_path}")
+excel.write_data_to_excel(
+    filepath=...,
+    sheet_name="Discrepancies",
+    data=discrepancies_list
+)
+excel.format_range(
+    ...,
+    conditional_format={
+        "type": "cell",
+        "operator": "greaterThan",
+        "value": 10000000,  # ۱۰ میلیون
+        "format": {"bg_color": "#fee2e2"}
+    }
+)
+```
+
+## گام ۴: خلاصه در Memory
+```
+openhuman.append_note(
+    title="Reconciliation ${today}",
+    content="تعداد مغایرت: ${count}, مجموع: ${total} ریال"
+)
+```</code></pre>
+</div>
+
+<h2 id="h-memory">۳.۳ Three-Tier Memory در Hermes</h2>
+
+<p>Hermes سه لایه حافظه دارد:</p>
+
+<div class="grid-3">
+  <div class="card">
+    <h4>💬 Session Memory</h4>
+    <p>گفتگوی جاری. با <code>/clear</code> پاک می‌شود.</p>
+  </div>
+  <div class="card">
+    <h4>📓 Long-Term Notes</h4>
+    <p>یادداشت‌های curated که خودتان یا Hermes ذخیره می‌کند. با <code>hermes note add</code>.</p>
+  </div>
+  <div class="card">
+    <h4>🔍 Full-Text Search</h4>
+    <p>SQLite FTS5 روی همه سشن‌ها. با <code>hermes search "keyword"</code>.</p>
+  </div>
+</div>
+
+<div class="example">
+<h4>مثال: افزودن یادداشت</h4>
+<pre><code># در Hermes chat:
+/note add "نرخ بیمه سهم کارفرما در ۱۴۰۵ برابر ۲۳٪ است"
+
+# جستجو:
+/search نرخ بیمه
+
+# یا از CLI:
+hermes note list
+hermes search "مالیات"</code></pre>
+</div>
+
+<h2 id="h-mcp-adv">۳.۴ پیکربندی MCP پیشرفته</h2>
+
+<div class="example">
+<h4>مثال: کنترل دقیق کدام tool در دسترس LLM باشد</h4>
+<pre><code># در ~/.hermes/config.yaml
+mcp_servers:
+  excel:
+    command: "uvx"
+    args: ["excel-mcp-server", "stdio"]
+    tools:
+      # فقط این‌ها را در دسترس LLM بگذار
+      include:
+        - create_workbook
+        - write_data_to_excel
+        - format_range
+        - apply_formula
+
+      # کاملاً exclude کن (خطرناک):
+      # exclude: [delete_worksheet]
+
+      # ابزارهای کمکی MCP را غیرفعال کن:
+      prompts: false
+      resources: false
+
+    # فراخوانی موازی
+    parallel_calls: 3
+
+  # سرور HTTP از راه دور
+  remote-tax:
+    url: "https://mcp-tax.mycompany.com/mcp"
+    headers:
+      Authorization: "Bearer ${env:REMOTE_TAX_TOKEN}"
+    tls:
+      cert: "D:/certs/client.pem"
+      verify: true
+
+  # سرور موقتاً غیرفعال
+  old-legacy:
+    url: "http://legacy.internal/mcp"
+    enabled: false</code></pre>
+</div>
+
+<h2 id="h-gepa">۳.۵ GEPA و Skill Evolution</h2>
+
+<p>GEPA (Genetic-Pareto Prompt Evolution) روش خودکار Hermes برای بهبود Skill هاست:</p>
+
+<pre><code># فعال‌سازی
+hermes skill evolve bank-reconciliation --iterations 5
+
+# در هر iteration:
+# 1. Hermes چند variant از SKILL.md می‌سازد
+# 2. هر یک را روی test cases اجرا می‌کند
+# 3. بهترین‌ها را حفظ می‌کند (Pareto front)
+# 4. تلفیق و mutation → نسل بعد
+
+# نتیجه در ~/.hermes/skills/bank-reconciliation/history/</code></pre>
+
+<h2 id="h-schedule">۳.۶ Scheduling و Cron</h2>
+
+<div class="example">
+<h4>مثال: اجرای خودکار هر روز صبح</h4>
+<pre><code># هر روز ساعت ۸ صبح یک گزارش خلاصه بساز:
+hermes schedule add \
+  --name "morning-summary" \
+  --cron "0 8 * * *" \
+  --task "خلاصه ایمیل‌های شب گذشته و تسک‌های امروز"
+
+# لیست:
+hermes schedule list
+
+# حذف:
+hermes schedule remove morning-summary
+
+# اجرای دستی برای تست:
+hermes schedule run morning-summary</code></pre>
+</div>
+
+<h2 id="h-multi">۳.۷ Multi-Model Routing</h2>
+
+<div class="example">
+<h4>مثال: routing rules در config.yaml</h4>
+<pre><code>routing:
+  enabled: true
+  rules:
+    # قانون ۱: داده حساس → مدل محلی
+    - name: sensitive-financial
+      match:
+        keywords: ["حقوق", "بیمه", "کد ملی", "حساب بانکی"]
+      route:
+        provider: ollama
+        model: qwen2.5:14b-instruct
+        base_url: http://localhost:11434
+
+    # قانون ۲: کارهای مرورگری فارسی → GPT-4.1
+    - name: iranian-web
+      match:
+        keywords: ["tamin", "tax.gov", "sana.ir"]
+      route:
+        provider: openai
+        model: gpt-4.1
+        # چون قوی‌ترین در مدیریت DOM و ترجمه است
+
+    # قانون ۳: پیش‌فرض
+    - name: default
+      route:
+        provider: anthropic
+        model: claude-sonnet-4-5</code></pre>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ PART 4: OPENHUMAN ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش چهارم</div>
+  <h1>OpenHuman — قابلیت‌های حافظه بلندمدت</h1>
+  <div class="chapter-desc">Memory Tree، Workflows، Integrations</div>
+</div>
+
+<h2 id="o-memtree">۴.۱ Memory Tree Navigation</h2>
+
+<p>ساختار Memory Tree در <code>~/.openhuman/wiki/</code>:</p>
+
+<pre><code>~/.openhuman/wiki/
+├── source/                    # به تفکیک منبع
+│   ├── gmail/
+│   │   ├── L0/               # خام (هر ایمیل یک فایل)
+│   │   ├── L1/               # خلاصه هفتگی
+│   │   └── L2/               # خلاصه ماهانه
+│   ├── notion/
+│   └── local/
+├── topic/                     # به تفکیک موضوع
+│   ├── payroll/
+│   ├── insurance-tamin/
+│   ├── tax-declarations/
+│   └── employees/
+│       ├── ali-ahmadi.md
+│       └── sara-rezaei.md
+└── global/                    # به تفکیک روز
+    ├── 2026-07-20.md
+    ├── 2026-07-21.md
+    └── ...</code></pre>
+
+<div class="example">
+<h4>مثال: افزودن دستی به Memory Tree</h4>
+<pre><code># ویرایش یک فایل markdown ساده:
+# ~/.openhuman/wiki/topic/employees/ali-ahmadi.md
+
+---
+type: employee
+national_id: "0012345678"
+insurance_code: "1234567890"
+status: active
+tags: [حسابدار, ارشد]
+---
+
+# علی احمدی
+
+## اطلاعات پایه
+- تاریخ تولد: 1365/03/15
+- تاریخ استخدام: 1400/07/01
+- سمت فعلی: حسابدار ارشد
+- پایه حقوق مرداد ۱۴۰۵: ۱۵۰,۰۰۰,۰۰۰ ریال
+
+## تاریخچه
+- 1404/12: افزایش حقوق ۲۰٪
+- 1405/03: ارتقا به حسابدار ارشد
+- 1405/05: ماموریت اصفهان ۳ روز
+
+## یادداشت‌ها
+مسئول تهیه لیست بیمه ماهانه. ایمیل: ali@company.ir</code></pre>
+</div>
+
+<div class="callout callout-success">
+<strong>🎯 نقطه قوت OpenHuman</strong>
+چون همه چیز فایل markdown است، می‌توانید:
+<ul style="margin-top: 5px;">
+  <li>با Obsidian ویرایش کنید</li>
+  <li>در git commit کنید (version control)</li>
+  <li>با VS Code جست‌وجو کنید</li>
+  <li>backup ساده بگیرید</li>
+  <li>manually اصلاح کنید و در گفتگوی بعدی درست شود</li>
+</ul>
+</div>
+
+<h2 id="o-workflow">۴.۲ tinyflows و tinyagents</h2>
+
+<p>OpenHuman یک engine گراف برای workflow های چند-مرحله‌ای دارد.</p>
+
+<div class="example">
+<h4>مثال: workflow ماهانه پرداخت حقوق</h4>
+<pre><code># ~/.openhuman/workflows/monthly-payroll.yaml
+name: monthly-payroll
+description: کل فرآیند حقوق ماهانه
+trigger:
+  cron: "0 9 1 * *"  # اول هر ماه، ۹ صبح
+
+nodes:
+  - id: fetch_overtime
+    type: agent
+    prompt: "از ایمیل‌های ماه گذشته، ساعات اضافه‌کار همه کارمندان را استخراج کن"
+
+  - id: calc_payroll
+    type: skill
+    skill: generate-monthly-payroll
+    inputs:
+      overtime: "${fetch_overtime.output}"
+    depends_on: [fetch_overtime]
+
+  - id: approval
+    type: human
+    message: "فایل ${calc_payroll.output.filepath} آماده است. تأیید می‌کنید؟"
+    depends_on: [calc_payroll]
+
+  - id: submit_tamin
+    type: skill
+    skill: submit-tamin-list
+    inputs:
+      payroll_file: "${calc_payroll.output.filepath}"
+    depends_on: [approval]
+
+  - id: notify
+    type: action
+    action: send_email
+    inputs:
+      to: manager@company.ir
+      subject: "حقوق ماه انجام شد"
+      body: "شماره پیگیری تامین: ${submit_tamin.output.tracking}"
+    depends_on: [submit_tamin]</code></pre>
+</div>
+
+<h2 id="o-integrations">۴.۳ OAuth Integrations</h2>
+
+<p>OpenHuman از ۱۰۰+ integration پشتیبانی می‌کند. مهم‌ترین‌ها برای کار اداری:</p>
+
+<table>
+<tr><th>سرویس</th><th>کاربرد اداری</th></tr>
+<tr><td>Gmail / Outlook</td><td>خواندن دستورات، پیوست فاکتورها</td></tr>
+<tr><td>Google Drive / OneDrive</td><td>ذخیره خودکار خروجی‌ها</td></tr>
+<tr><td>Google Calendar</td><td>سررسیدها (مهلت مالیات، بیمه)</td></tr>
+<tr><td>Notion</td><td>پایگاه دانش شرکت</td></tr>
+<tr><td>Slack / Microsoft Teams</td><td>اعلان‌های تیمی</td></tr>
+<tr><td>GitHub</td><td>مدیریت Skill ها به‌صورت repo</td></tr>
+<tr><td>Airtable</td><td>پایگاه داده کارمندان</td></tr>
+</table>
+
+<h2 id="o-search">۴.۴ Semantic Search</h2>
+
+<div class="example">
+<h4>مثال: جست‌وجوی معنایی در حافظه</h4>
+<pre><code># در Dashboard OpenHuman → Search:
+# "کارمندانی که سال گذشته افزایش حقوق داشتند"
+
+# یا از Hermes:
+result = openhuman.query_memory(
+    query="کارمندان با افزایش حقوق در ۱۴۰۴",
+    limit=20,
+    scope=["topic/employees"]
+)</code></pre>
+</div>
+
+<h2 id="o-schema">۴.۵ Schema Templates</h2>
+
+<div class="example">
+<h4>مثال: تعریف schema برای فاکتور</h4>
+<pre><code># ~/.openhuman/wiki/schema/invoice.md
+---
+type: schema
+name: invoice
+version: 1
+---
+
+# Invoice Schema
+
+## Fields
+- `invoice_number`: string (required)
+- `date`: date (YYYY/MM/DD جلالی)
+- `payer`: object
+  - `name`: string
+  - `tax_id`: string (شماره اقتصادی)
+- `payee`: object
+  - `name`: string
+  - `tax_id`: string
+- `items`: array
+  - `description`: string
+  - `quantity`: number
+  - `unit_price`: number
+- `subtotal`: number (محاسبه)
+- `vat`: number (=subtotal*0.1)
+- `total`: number
+
+## Storage
+یک فاکتور در `topic/invoices/${invoice_number}.md` ذخیره می‌شود.</code></pre>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ PART 5: SCENARIOS ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش پنجم</div>
+  <h1>سناریوهای ترکیبی End-to-End</h1>
+  <div class="chapter-desc">۱۰ سناریوی واقعی که همین امروز می‌توانید پیاده کنید</div>
+</div>
+
+<h2 id="s-payroll">۵.۱ سناریو ۱: فیش حقوق کامل</h2>
+
+<div class="callout callout-example">
+<strong>هدف</strong>
+هر ماه، بدون هیچ دخالت انسانی، فیش حقوق ۵۰ کارمند را با در نظر گرفتن اضافه‌کار (از ایمیل)، بیمه، مالیات و مزایا محاسبه و تولید کن.
+</div>
+
+<h3>Prompt نهایی</h3>
+
+<pre><code>You: فیش حقوق مرداد ۱۴۰۵ را برای همه کارمندان بساز.
+     اضافه‌کارها را از ایمیل مدیر عامل هفته گذشته
+     (subject: "ساعات اضافه‌کار مرداد") دریافت کن.
+     خروجی را در D:/Office/Payroll/1405/mordad/ ذخیره کن
+     با نمودار توزیع خالص در sheet 'گزارش'.
+
+Hermes: [اجرای کامل]
+✅ فیش‌های ۵۰ کارمند ساخته شد
+📁 D:/Office/Payroll/1405/mordad/payroll_mordad_1405.xlsx
+💰 جمع خالص: ۷,۸۴۵,۲۰۰,۰۰۰ ریال
+📊 نمودار در sheet 'گزارش'
+⏱ زمان اجرا: ۲ دقیقه و ۱۴ ثانیه</code></pre>
+
+<h2 id="s-tamin">۵.۲ سناریو ۲: ثبت لیست بیمه</h2>
+
+<pre><code>You: لیست بیمه ماه مرداد را در tamin.ir ثبت کن.
+     فایل payroll ماه در D:/Office/Payroll/1405/mordad/ موجود است.
+
+Hermes: [مراحل]
+1. تولید فایل DSK استاندارد از payroll xlsx
+2. باز کردن eservices.tamin.ir در مرورگر
+3. لاگین (session ذخیره‌شده استفاده می‌شود)
+4. رفتن به منوی "ارسال لیست ماهانه"
+5. آپلود فایل DSK
+6. بررسی خطاها → صفر خطا ✅
+7. ⏸ توقف برای OTP: "لطفاً کد ارسال‌شده به موبایل را وارد کنید"
+8. [شما OTP را می‌دهید]
+9. تأیید نهایی
+10. استخراج شماره پیگیری: TR-1405050034521
+11. ذخیره در Memory: topic/insurance-tamin/mordad-1405.md
+✅ انجام شد</code></pre>
+
+<h2 id="s-tax">۵.۳ سناریو ۳: اظهارنامه فصلی</h2>
+
+<pre><code>You: اظهارنامه معاملات فصلی سه‌ماهه دوم ۱۴۰۵ را آماده و ارسال کن
+
+Hermes: [مراحل ۱۲ گانه]
+1-4. جمع‌آوری فاکتورها از OpenHuman + پوشه Invoices
+5-7. تولید XML مطابق schema tax.gov.ir
+8. اعتبارسنجی XML
+9-11. آپلود در tax.gov.ir + OTP
+12. ذخیره رسید</code></pre>
+
+<h2 id="s-invoice">۵.۴ سناریو ۴: تولید فاکتور</h2>
+
+<pre><code>You: یک فاکتور فروش برای شرکت 'پارس صنعت' با کد اقتصادی ۱۱۲۲۳۳۴۴۵۵
+     برای ۱۰۰ عدد قطعه A45 با قیمت واحد ۵ میلیون بساز.
+
+Hermes:
+✅ فاکتور INV-1405-0876 ساخته شد
+📄 D:/Office/Invoices/INV-1405-0876.xlsx
+   - اقلام: ۱۰۰ × A45
+   - جمع: 500,000,000
+   - VAT 10%: 50,000,000
+   - مبلغ نهایی: 550,000,000 ریال
+   - به حروف: "پانصد و پنجاه میلیون ریال"</code></pre>
+
+<h2 id="s-reconcile">۵.۵ سناریو ۵: مغایرت‌گیری بانکی</h2>
+
+<pre><code>You: صورت‌حساب بانک D:/Downloads/bank_statement_july.xlsx را
+     با دفتر داخلی D:/Office/Ledger/2026_07.xlsx مغایرت‌گیری کن.
+
+Hermes:
+1. خواندن هر دو فایل
+2. تطبیق بر اساس مبلغ + تاریخ (±3 روز)
+3. مغایرت‌ها:
+   - ۳ تراکنش در بانک، در دفتر نیست
+   - ۱ تراکنش در دفتر، در بانک نیست
+4. تولید گزارش D:/Office/Reconciliation/1405_05.xlsx
+   با conditional formatting قرمز روی discrepancy ها</code></pre>
+
+<h2 id="s-report">۵.۶ سناریو ۶: گزارش مدیریتی هفتگی</h2>
+
+<pre><code>You: گزارش هفتگی مدیریت شامل:
+     - جمع فاکتورهای هفته
+     - وضعیت مطالبات
+     - هزینه‌های ثبت‌شده
+     - مقایسه با هفته قبل
+     را بساز و به مدیرعامل ایمیل کن.
+
+Hermes:
+[۸ tool call]
+✅ گزارش D:/Office/Reports/weekly_1405_05_03.xlsx ساخته شد
+📧 ایمیل ارسال شد به: ceo@company.ir</code></pre>
+
+<h2 id="s-dashboard">۵.۷ سناریو ۷: داشبورد KPI</h2>
+
+<pre><code>You: یک داشبورد KPI ماهانه با این شاخص‌ها بساز:
+     - فروش ماهانه (نمودار خطی ۱۲ ماه)
+     - سود ناخالص % (bar chart)
+     - Top 5 مشتری (pie)
+     - هزینه‌های سربار (stacked bar)
+
+Hermes: [ترکیب ۴ نمودار در یک sheet با layout حرفه‌ای]</code></pre>
+
+<h2 id="s-email">۵.۸ سناریو ۸: ارسال ایمیل انبوه</h2>
+
+<pre><code>You: به همه کارمندانی که فیش حقوق مرداد ساخته شده،
+     فیش شخصی‌شان را به‌صورت PDF ایمیل کن.
+
+Hermes:
+1. برای هر کارمند: فیش شخصی از xlsx به PDF
+2. ایمیل با ضمیمه PDF از طریق openhuman.send_email
+3. Log در ~/.openhuman/wiki/topic/payroll/mordad_1405_emails.md</code></pre>
+
+<h2 id="s-nightly">۵.۹ سناریو ۹: پردازش شبانه خودکار</h2>
+
+<pre><code># در ~/.hermes/schedules/nightly.yaml
+schedules:
+  - name: nightly-processing
+    cron: "0 2 * * *"  # هر شب ۲ صبح
+    task: |
+      1. همه ایمیل‌های جدید را در OpenHuman index کن
+      2. فاکتورهای PDF جدید در D:/Office/Inbox/ را
+         extract و در Ledger ثبت کن
+      3. مغایرت‌گیری بانکی روز گذشته
+      4. یک خلاصه در ~/.openhuman/wiki/global/${today}.md بنویس</code></pre>
+
+<h2 id="s-learn">۵.۱۰ سناریو ۱۰: یادگیری از خطا</h2>
+
+<pre><code>You: [یک کار جدید که Skill ندارد] فایل بازخوردهای مشتری
+     را از تلگرام کانال شرکت جمع کن و در اکسل خلاصه کن.
+
+Hermes: [کار پیچیده ۱۲ گام]
+✅ انجام شد
+
+Hermes: این کار پیچیده بود (۱۲ tool call).
+       پیشنهاد می‌کنم به‌عنوان Skill ذخیره شود.
+       نام: telegram-feedback-collector؟
+
+You: بله
+
+Hermes: ✅ Skill ساخته شد. ماه آینده که همین کار را
+       بخواهید، فقط بگویید "بازخورد ماهانه تلگرام".</code></pre>
+
+<hr class="section-break">
+
+<!-- ============ PART 6: ADVANCED ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">بخش ششم</div>
+  <h1>تکنیک‌های پیشرفته و بهترین شیوه‌ها</h1>
+  <div class="chapter-desc">توصیه‌هایی از کاربران حرفه‌ای</div>
+</div>
+
+<h2 id="a-error">۶.۱ مدیریت خطا و Retry</h2>
+
+<div class="example">
+<h4>مثال: Skill با retry logic</h4>
+<pre><code>---
+name: robust-tamin-submit
+description: ثبت بیمه با تحمل خطا
+---
+
+# فرآیند
+1. تلاش اول
+2. اگر خطای شبکه: صبر ۳۰ ثانیه و تلاش دوم
+3. اگر خطای اعتبار: به کاربر اطلاع بده
+4. اگر ۳ بار پشت سر هم شکست: هشدار بحرانی
+
+```python
+for attempt in range(3):
+    try:
+        result = browser.browse_and_do(...)
+        break
+    except NetworkError:
+        wait(30 * (attempt + 1))
+    except AuthError:
+        notify_user("رمز یا session منقضی")
+        break
+else:
+    notify_admin("۳ بار متوالی شکست خورد")
+```</code></pre>
+</div>
+
+<h2 id="a-cost">۶.۲ بهینه‌سازی هزینه توکن</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>💰 صرفه‌جویی</h4>
+    <ul>
+      <li>Ollama برای cases حساس (رایگان)</li>
+      <li>gpt-4o-mini برای خلاصه‌سازی</li>
+      <li>Cache کردن نتایج تکراری</li>
+      <li>حذف Skill های استفاده‌نشده</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>📊 مانیتورینگ</h4>
+    <ul>
+      <li><code>hermes usage</code></li>
+      <li><code>hermes usage --by-skill</code></li>
+      <li><code>hermes usage --model claude</code></li>
+      <li>Alert اگر > $50/month</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="a-parallel">۶.۳ Parallelism</h2>
+
+<div class="example">
+<h4>مثال: پردازش موازی ۵۰ فاکتور PDF</h4>
+<pre><code>import asyncio
+
+async def process_invoice(pdf_path):
+    agent = Agent(
+        task=f"از {pdf_path} داده‌های فاکتور را استخراج کن",
+        llm=llm
+    )
+    return await agent.run()
+
+# اجرای ۵ به ۵ موازی
+async def main():
+    pdfs = get_pdf_list("D:/Office/Inbox/")
+    semaphore = asyncio.Semaphore(5)
+
+    async def bounded_process(pdf):
+        async with semaphore:
+            return await process_invoice(pdf)
+
+    results = await asyncio.gather(
+        *[bounded_process(p) for p in pdfs]
+    )</code></pre>
+</div>
+
+<h2 id="a-testing">۶.۴ تست و ارزیابی Skill</h2>
+
+<div class="example">
+<h4>مثال: test suite برای Skill</h4>
+<pre><code>hermes skill test-add bank-reconciliation \
+  --input '{
+    "bank_statement": "tests/fixtures/bank_july.xlsx",
+    "ledger": "tests/fixtures/ledger_july.xlsx"
+  }' \
+  --expected '{
+    "discrepancy_count": 3,
+    "total_amount": 45000000
+  }'
+
+# اجرا:
+hermes skill test bank-reconciliation
+
+# ✅ 8/10 tests passed
+# ❌ Test #3 failed: expected 3 discrepancies, got 4
+#    → مشکل در تطبیق تاریخ‌های شمسی</code></pre>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ FINAL ============ -->
+<div class="callout callout-success" style="margin-top: 60px;">
+<strong>🎓 نتیجه‌گیری</strong>
+<p style="margin-top: 10px;">شما اکنون یک درک عمیق از ۱۰۰+ قابلیت این چهار ابزار دارید. اما مهم‌ترین چیزی که باید به یاد داشته باشید: <span class="highlight">این ابزارها فقط زمانی به‌طور کامل مفید می‌شوند که Skill هایی متناسب با کار خود بسازید</span>. توصیه ما: هفته اول را صرف نصب و آزمایش کنید. هفته دوم را صرف ساخت ۳-۵ Skill پایه (فیش حقوق، بیمه، فاکتور) کنید. از هفته سوم به بعد، سیستم به حدی بالغ می‌شود که واقعاً «خودش می‌فهمد چه می‌خواهید».</p>
+</div>
+
+<h2>📚 پیوست: چک‌لیست شروع</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>✅ هفته اول: نصب</h4>
+    <ol>
+      <li>Python 3.12، Node.js، uv</li>
+      <li>Ollama + qwen2.5:14b</li>
+      <li>OpenHuman + اتصال Gmail</li>
+      <li>Hermes + کلید Claude</li>
+      <li>mcp-server-excel</li>
+      <li>Browser Use + پروفایل</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h4>✅ هفته دوم: Skill های پایه</h4>
+    <ol>
+      <li>generate-payroll-template</li>
+      <li>submit-tamin-list</li>
+      <li>complex-payment-document</li>
+      <li>bank-reconciliation</li>
+      <li>monthly-management-report</li>
+    </ol>
+  </div>
+</div>
+
+<h2>🔗 لینک‌های سریع مرجع</h2>
+
+<ol>
+  <li><a href="https://github.com/haris-musa/excel-mcp-server/blob/main/TOOLS.md">TOOLS.md کامل excel-mcp-server</a></li>
+  <li><a href="https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference">MCP Config Reference</a></li>
+  <li><a href="https://docs.browser-use.com/open-source/customize/tools/add">Browser Use Custom Tools</a></li>
+  <li><a href="https://tinyhumans.gitbook.io/openhuman/">OpenHuman Docs</a></li>
+  <li><a href="https://agentskills.io/specification">Agent Skills Specification</a></li>
+</ol>
+
+<div style="text-align: center; margin-top: 80px; padding: 30px; background: linear-gradient(135deg, #064e3b, #0891b2); color: white; border-radius: 15px;">
+<h2 style="color: white; border: none; background: none;">✨ پایان سند</h2>
+<p style="opacity: 0.95;">نسخه ۱.۰ • آموزش دایرة‌المعارفی • ۱۴۰۵</p>
+</div>
+
+</div>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>

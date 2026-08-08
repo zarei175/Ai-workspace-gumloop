@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای جامع ترکیب OpenHuman + Hermes Agent + mcp-server-excel + Browser Use</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  line-height: 1.9;
+  color: #1a202c;
+  background: #f7fafc;
+  direction: rtl;
+  text-align: right;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  background: white;
+  box-shadow: 0 0 40px rgba(0,0,0,0.06);
+}
+
+/* Cover Page */
+.cover {
+  min-height: 90vh;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #6b21a8 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  border-radius: 16px;
+  margin-bottom: 60px;
+  page-break-after: always;
+}
+.cover h1 {
+  font-size: 3.2em;
+  margin-bottom: 20px;
+  line-height: 1.3;
+  font-weight: 900;
+}
+.cover .subtitle {
+  font-size: 1.5em;
+  opacity: 0.95;
+  margin-bottom: 40px;
+  max-width: 800px;
+}
+.cover .badges {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+}
+.cover .badge {
+  background: rgba(255,255,255,0.15);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.95em;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.cover .meta {
+  margin-top: 40px;
+  font-size: 1em;
+  opacity: 0.85;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5 { color: #1e3a8a; margin-top: 40px; margin-bottom: 20px; font-weight: 800; }
+h1 { font-size: 2.5em; border-bottom: 4px solid #3730a3; padding-bottom: 15px; }
+h2 { font-size: 2em; border-right: 6px solid #6366f1; padding-right: 15px; background: linear-gradient(to left, #eef2ff, transparent); padding: 12px 15px; border-radius: 8px; }
+h3 { font-size: 1.5em; color: #4338ca; }
+h4 { font-size: 1.2em; color: #5b21b6; }
+p { margin-bottom: 15px; text-align: justify; }
+
+/* TOC */
+.toc {
+  background: #eef2ff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border-right: 6px solid #3730a3;
+  margin: 40px 0;
+}
+.toc h2 { border: none; background: none; padding: 0; margin-bottom: 20px; }
+.toc ol { padding-right: 25px; }
+.toc li { margin: 8px 0; font-size: 1.05em; }
+.toc a { color: #3730a3; text-decoration: none; font-weight: 500; }
+.toc a:hover { color: #6b21a8; text-decoration: underline; }
+.toc ol ol { margin-top: 5px; padding-right: 25px; }
+.toc ol ol li { font-size: 0.95em; color: #4b5563; }
+
+/* Code blocks */
+pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 20px 25px;
+  border-radius: 10px;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+  margin: 20px 0;
+  font-size: 0.9em;
+  line-height: 1.6;
+  font-family: 'Consolas', 'Monaco', monospace;
+  border-right: 4px solid #6366f1;
+}
+code {
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #dc2626;
+  font-size: 0.92em;
+  direction: ltr;
+  display: inline-block;
+}
+pre code { background: none; color: inherit; padding: 0; }
+
+/* Callouts */
+.callout {
+  padding: 18px 25px;
+  margin: 25px 0;
+  border-radius: 10px;
+  border-right: 5px solid;
+}
+.callout-info { background: #dbeafe; border-color: #2563eb; }
+.callout-warning { background: #fef3c7; border-color: #d97706; }
+.callout-success { background: #d1fae5; border-color: #059669; }
+.callout-danger { background: #fee2e2; border-color: #dc2626; }
+.callout-tip { background: #ede9fe; border-color: #7c3aed; }
+.callout strong { display: block; margin-bottom: 8px; font-size: 1.05em; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+th {
+  background: linear-gradient(135deg, #3730a3, #6b21a8);
+  color: white;
+  padding: 14px;
+  text-align: right;
+  font-weight: 700;
+}
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+tr:nth-child(even) td { background: #f9fafb; }
+tr:hover td { background: #eef2ff; }
+
+/* Steps */
+.step {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-right: 5px solid #6366f1;
+  padding: 20px 25px;
+  margin: 20px 0;
+  border-radius: 10px;
+  position: relative;
+}
+.step-number {
+  display: inline-block;
+  background: #6366f1;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 36px;
+  font-weight: 800;
+  margin-left: 12px;
+  font-size: 1.1em;
+}
+.step h4 { margin-top: 0; display: inline-block; }
+
+/* Architecture diagrams */
+.arch-diagram {
+  background: linear-gradient(135deg, #f0f9ff, #ede9fe);
+  padding: 40px;
+  border-radius: 15px;
+  margin: 30px 0;
+  text-align: center;
+  border: 2px dashed #6366f1;
+}
+.arch-box {
+  display: inline-block;
+  background: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  margin: 8px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  border: 2px solid #6366f1;
+  font-weight: 600;
+  color: #3730a3;
+}
+.arch-arrow {
+  font-size: 1.5em;
+  color: #6366f1;
+  margin: 5px;
+}
+
+/* Feature Cards */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 25px 0; }
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  border-top: 4px solid #6366f1;
+}
+.card h4 { margin-top: 0; color: #4338ca; }
+
+/* Section separators */
+.section-break {
+  height: 3px;
+  background: linear-gradient(to left, #6366f1, transparent);
+  margin: 50px 0;
+  border: none;
+}
+
+/* Number highlight */
+.big-num {
+  font-size: 3em;
+  font-weight: 900;
+  color: #6366f1;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Chapter header */
+.chapter-header {
+  background: linear-gradient(135deg, #1e3a8a, #6b21a8);
+  color: white;
+  padding: 40px;
+  border-radius: 15px;
+  margin: 60px 0 40px;
+  text-align: center;
+}
+.chapter-header .chapter-num {
+  font-size: 1em;
+  opacity: 0.8;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+.chapter-header h1 {
+  color: white;
+  border: none;
+  font-size: 2.8em;
+  margin: 0;
+}
+.chapter-header .chapter-desc {
+  margin-top: 15px;
+  opacity: 0.95;
+  font-size: 1.1em;
+}
+
+ul, ol { padding-right: 30px; margin: 15px 0; }
+li { margin: 8px 0; }
+
+.highlight { background: linear-gradient(120deg, #fef3c7 0%, #fef3c7 100%); background-repeat: no-repeat; background-size: 100% 40%; background-position: 0 88%; padding: 0 4px; font-weight: 600; }
+
+@media print {
+  body { background: white; }
+  .container { box-shadow: none; padding: 20px; }
+  .chapter-header { page-break-before: always; }
+  h2 { page-break-after: avoid; }
+  pre { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============ COVER PAGE ============ -->
+<div class="cover">
+  <div style="font-size: 4em; margin-bottom: 20px;">🏛️</div>
+  <h1>سند جامع معماری ترکیبی</h1>
+  <div class="subtitle">
+    ساخت یک دستیار هوش مصنوعی سازمانی برای خودکارسازی کارهای اداری، بیمه، مالیات و حقوق<br>
+    با ترکیب OpenHuman + Hermes Agent + mcp-server-excel + Browser Use
+  </div>
+  <div class="badges">
+    <div class="badge">🧠 حافظه بلندمدت</div>
+    <div class="badge">🤖 مهارت‌های خودآموز</div>
+    <div class="badge">📊 اکسل خودکار</div>
+    <div class="badge">🌐 مرورگر هوشمند</div>
+    <div class="badge">🇮🇷 سامانه‌های ایرانی</div>
+    <div class="badge">🔒 حریم خصوصی محلی</div>
+  </div>
+  <div class="meta">
+    نسخه ۱.۰ • Windows 10/11 • سطح: پیشرفته • تاریخ: تیر ۱۴۰۵ (ژوئیه ۲۰۲۶)
+  </div>
+</div>
+
+<!-- ============ EXECUTIVE SUMMARY ============ -->
+<h1 id="summary">خلاصه اجرایی</h1>
+
+<p>این سند یک <span class="highlight">معماری مرجع سازمانی</span> برای ساخت یک دستیار هوش مصنوعی است که کارهای اداری تکراری و پیچیدهٔ شما — از کار با سامانه‌های بیمه (<code>tamin.ir</code>)، مالیات (<code>tax.gov.ir</code>) و حقوق تا تولید اسناد پرداخت پیچیده در اکسل — را به‌طور کامل خودکار می‌کند. تفاوت این معماری با یک «چت‌بات» یا یک اسکریپت RPA در این است که سیستم <span class="highlight">یاد می‌گیرد</span>: هر بار که کاری برایتان انجام می‌دهد، یک «مهارت» جدید به مخزن خود اضافه می‌کند و در دفعات بعد آن را بهبود می‌بخشد. پس از چند ماه استفاده، سیستم دیگر نیاز به دستور دقیق ندارد — اگر بگویید «فیش حقوق مرداد را مثل تیر با ۱۵٪ اضافه‌کار برای احمدی درست کن»، خودش می‌فهمد.</p>
+
+<div class="callout callout-info">
+<strong>📌 نتیجه نهایی این معماری چیست؟</strong>
+یک دستیار هوش مصنوعی که (۱) <strong>OpenHuman</strong> به‌عنوان مغز و حافظهٔ بلندمدت آن روی کامپیوتر شما اجرا می‌شود، (۲) <strong>Hermes Agent</strong> کنار آن به‌عنوان دستیار اجرایی خودآموز عمل می‌کند، (۳) <strong>mcp-server-excel</strong> به آن قدرت دستکاری کامل اکسل بدون نصب Microsoft Excel می‌دهد، و (۴) <strong>Browser Use</strong> امکان کار خودکار با سامانه‌های ایرانی فاقد API را فراهم می‌کند.
+</div>
+
+<h2>چرا این چهار ابزار؟</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>🧠 OpenHuman — مغز مرکزی</h4>
+    <p>یک عامل هوش مصنوعی متن‌باز (GPL-3) نوشته‌شده به زبان Rust که روی سیستم شما اجرا می‌شود. تفاوت کلیدی: حافظه‌اش به‌صورت درخت مارک‌داون قابل‌خواندن در پوشه <code>~/.openhuman/wiki/</code> ذخیره می‌شود، نه یک vector database غیرقابل‌فهم. هر ۲۰ دقیقه به‌طور خودکار داده‌های شما را از منابع متصل (Gmail، Notion، Slack و...) واکشی و به‌روزرسانی می‌کند.</p>
+  </div>
+  <div class="card">
+    <h4>🤖 Hermes Agent — دستیار اجرایی</h4>
+    <p>ساخت Nous Research — تنها عاملی که یک <em>Learning Loop</em> بستهٔ واقعی دارد. پس از هر کار پیچیده (بیش از ۵ فراخوان ابزار)، خودش یک «Skill» به‌صورت فایل Markdown با YAML frontmatter می‌سازد و در دفعات بعد آن را بهبود می‌دهد. از MCP به‌صورت first-class پشتیبانی می‌کند.</p>
+  </div>
+  <div class="card">
+    <h4>📊 mcp-server-excel — قدرت اکسل</h4>
+    <p>یک سرور Model Context Protocol که به عامل هوش مصنوعی امکان می‌دهد <strong>بدون نصب Microsoft Excel</strong> فایل‌های <code>.xlsx</code> بسازد، بخواند، فرمول اضافه کند، PivotTable و نمودار بسازد، قالب‌بندی شرطی اعمال کند و... این ابزار برای «اسناد پرداخت پیچیده» شما دقیقاً ساخته شده است.</p>
+  </div>
+  <div class="card">
+    <h4>🌐 Browser Use — چشم و دست وب</h4>
+    <p>یک کتابخانه Python متن‌باز با بیش از ۷۹ هزار ستاره در GitHub که به هر LLM اجازه می‌دهد یک مرورگر واقعی را کنترل کند: ورود به سامانه، پرکردن فرم، دانلود فایل، تعامل با CAPTCHA. برای سامانه‌های ایرانی مثل <code>tax.gov.ir</code> و <code>tamin.ir</code> که API عمومی ندارند، تنها راه عملی خودکارسازی است.</p>
+  </div>
+</div>
+
+<h2>مزایای کلیدی این معماری</h2>
+
+<table>
+<tr><th>ویژگی</th><th>راهکار سنتی (اکسل + دست)</th><th>این معماری ترکیبی</th></tr>
+<tr><td>زمان تولید فیش حقوق ماهانه (۵۰ کارمند)</td><td>۴-۶ ساعت</td><td>۳-۵ دقیقه</td></tr>
+<tr><td>ثبت لیست بیمه در tamin.ir</td><td>۲-۳ ساعت + خطاهای دستی</td><td>۱۰ دقیقه، بدون خطا</td></tr>
+<tr><td>ارسال اظهارنامه مالیاتی</td><td>نیاز به تخصص، ریسک خطا</td><td>خودکار با تأیید شما</td></tr>
+<tr><td>یادگیری روال جدید</td><td>هربار از صفر</td><td>یک‌بار یاد می‌گیرد، ابدی</td></tr>
+<tr><td>هزینه ماهانه</td><td>حقوق نیروی اداری</td><td>~۲۰-۵۰ دلار API + برق</td></tr>
+<tr><td>حریم خصوصی داده‌های حساس</td><td>احتمال نشت انسانی</td><td>Privacy Mode محلی</td></tr>
+</table>
+
+<hr class="section-break">
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<div class="toc">
+<h2 id="toc">📚 فهرست مطالب</h2>
+<ol>
+  <li><a href="#ch1">فصل اول: مبانی نظری و درک اکوسیستم</a>
+    <ol>
+      <li><a href="#ch1-1">۱.۱ چرا یک «عامل» با یک «چت‌بات» فرق دارد</a></li>
+      <li><a href="#ch1-2">۱.۲ سه لایه معماری: مغز، دست، چشم</a></li>
+      <li><a href="#ch1-3">۱.۳ پروتکل MCP: زبان مشترک ابزارها</a></li>
+      <li><a href="#ch1-4">۱.۴ Skill، Memory و Learning Loop</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch2">فصل دوم: پیش‌نیازها و آماده‌سازی ویندوز</a>
+    <ol>
+      <li><a href="#ch2-1">۲.۱ چک‌لیست سخت‌افزار و نرم‌افزار</a></li>
+      <li><a href="#ch2-2">۲.۲ نصب Python 3.12، Node.js، uv</a></li>
+      <li><a href="#ch2-3">۲.۳ نصب Git، PowerShell 7، Windows Terminal</a></li>
+      <li><a href="#ch2-4">۲.۴ نصب Ollama برای مدل‌های محلی</a></li>
+      <li><a href="#ch2-5">۲.۵ تهیه کلیدهای API آنلاین</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch3">فصل سوم: نصب و پیکربندی OpenHuman</a>
+    <ol>
+      <li><a href="#ch3-1">۳.۱ دانلود و اجرای نصب‌کننده</a></li>
+      <li><a href="#ch3-2">۳.۲ پیکربندی Memory Tree و Obsidian Vault</a></li>
+      <li><a href="#ch3-3">۳.۳ فعال‌سازی Privacy Mode</a></li>
+      <li><a href="#ch3-4">۳.۴ اتصال منابع داده اداری</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch4">فصل چهارم: نصب و پیکربندی Hermes Agent</a>
+    <ol>
+      <li><a href="#ch4-1">۴.۱ اجرای install.ps1</a></li>
+      <li><a href="#ch4-2">۴.۲ فایل config.yaml — راهنمای کامل</a></li>
+      <li><a href="#ch4-3">۴.۳ اتصال Hermes به مدل ترکیبی (Cloud + Local)</a></li>
+      <li><a href="#ch4-4">۴.۴ فعال‌سازی Learning Loop</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch5">فصل پنجم: نصب و پیکربندی mcp-server-excel</a>
+    <ol>
+      <li><a href="#ch5-1">۵.۱ نصب با uvx و پیکربندی مسیر فایل‌ها</a></li>
+      <li><a href="#ch5-2">۵.۲ اتصال به Hermes از طریق mcp_servers</a></li>
+      <li><a href="#ch5-3">۵.۳ تست عملی: ساخت اولین فیش حقوق</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch6">فصل ششم: نصب و پیکربندی Browser Use</a>
+    <ol>
+      <li><a href="#ch6-1">۶.۱ نصب کتابخانه و اتصال به مدل</a></li>
+      <li><a href="#ch6-2">۶.۲ استفاده از پروفایل Chrome برای احراز هویت</a></li>
+      <li><a href="#ch6-3">۶.۳ ارائه Browser Use به‌عنوان MCP Server</a></li>
+      <li><a href="#ch6-4">۶.۴ چالش CAPTCHA در سامانه‌های ایرانی</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch7">فصل هفتم: معماری ترکیبی نهایی و جریان اطلاعات</a>
+    <ol>
+      <li><a href="#ch7-1">۷.۱ نقشه جامع سیستم</a></li>
+      <li><a href="#ch7-2">۷.۲ پل ارتباطی OpenHuman ↔ Hermes</a></li>
+      <li><a href="#ch7-3">۷.۳ چرخهٔ کامل: ورود دستور تا خروجی نهایی</a></li>
+      <li><a href="#ch7-4">۷.۴ الگوی داده‌ای مشترک</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch8">فصل هشتم: سناریوهای عملی برای کارهای اداری ایرانی</a>
+    <ol>
+      <li><a href="#ch8-1">۸.۱ سناریو ۱: تولید فیش حقوق ماهانه</a></li>
+      <li><a href="#ch8-2">۸.۲ سناریو ۲: ثبت لیست بیمه در tamin.ir</a></li>
+      <li><a href="#ch8-3">۸.۳ سناریو ۳: ارسال اظهارنامه مالیاتی</a></li>
+      <li><a href="#ch8-4">۸.۴ سناریو ۴: صورت‌حساب و اسناد پرداخت پیچیده</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch9">فصل نهم: نگهداری، پشتیبان‌گیری و عیب‌یابی</a>
+    <ol>
+      <li><a href="#ch9-1">۹.۱ پشتیبان‌گیری از حافظه و مهارت‌ها</a></li>
+      <li><a href="#ch9-2">۹.۲ لاگ‌ها و رفع خطاهای رایج</a></li>
+      <li><a href="#ch9-3">۹.۳ بهینه‌سازی هزینه API</a></li>
+    </ol>
+  </li>
+  <li><a href="#ch10">فصل دهم: امنیت، انطباق و بهترین شیوه‌ها</a>
+    <ol>
+      <li><a href="#ch10-1">۱۰.۱ مدیریت اسرار و توکن‌ها</a></li>
+      <li><a href="#ch10-2">۱۰.۲ داده‌های حساس و Privacy Mode</a></li>
+      <li><a href="#ch10-3">۱۰.۳ Human-in-the-loop برای عملیات مالی</a></li>
+    </ol>
+  </li>
+  <li><a href="#refs">منابع و مراجع</a></li>
+</ol>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 1 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل اول</div>
+  <h1>مبانی نظری و درک اکوسیستم</h1>
+  <div class="chapter-desc">قبل از اینکه یک خط دستور بزنیم، باید بدانیم چه چیزی می‌سازیم و چرا</div>
+</div>
+
+<h2 id="ch1-1">۱.۱ چرا یک «عامل» با یک «چت‌بات» فرق دارد</h2>
+
+<p>وقتی از ChatGPT می‌پرسید «فیش حقوق را چطور محاسبه کنم؟»، پاسخی متنی می‌گیرید. اما وقتی به یک <strong>Agent</strong> (عامل) می‌گویید «فیش‌های حقوق مرداد را برای ۵۰ کارمند بساز، در tamin.ir لیست بیمه را ثبت کن، و فایل نهایی را در OneDrive بگذار»، آن عامل باید بتواند: (۱) بفهمد کارمندان چه کسانی‌اند، (۲) اکسل باز کند و بنویسد، (۳) با مرورگر لاگین کند، (۴) داده‌ها را وارد کند، (۵) خطاها را مدیریت کند، (۶) نتیجه را گزارش دهد. این یعنی <span class="highlight">Perceive → Reason → Act</span> در یک حلقهٔ بسته.</p>
+
+<div class="arch-diagram">
+  <div class="arch-box">🎯 هدف کاربر</div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">🧠 استدلال (LLM)</div>
+    <div class="arch-arrow">↔</div>
+    <div class="arch-box">💾 حافظه بلندمدت</div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">📊 اکسل</div>
+    <div class="arch-box">🌐 مرورگر</div>
+    <div class="arch-box">📁 فایل‌سیستم</div>
+    <div class="arch-box">📧 ایمیل</div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-box">✅ نتیجه + مهارت جدید ذخیره‌شده</div>
+</div>
+
+<h3>سه ویژگی که یک عامل واقعی را از چت‌بات جدا می‌کند</h3>
+
+<ol>
+  <li><strong>Tool Use (استفاده از ابزار):</strong> عامل می‌تواند به فایل‌سیستم، اکسل، مرورگر، API و... دست بزند. در معماری ما این نقش را <em>Hermes</em> از طریق ابزارهای MCP بازی می‌کند.</li>
+  <li><strong>Long-Term Memory (حافظه بلندمدت):</strong> عامل چیزی که در گفتگوی هفتهٔ پیش یاد گرفته را به‌خاطر دارد. این نقش را <em>OpenHuman</em> با Memory Tree خود بازی می‌کند.</li>
+  <li><strong>Self-Improvement (خودبهبودی):</strong> عامل از خطاها یاد می‌گیرد و روش انجام کار را بهبود می‌بخشد. این نقش را <em>Hermes Learning Loop</em> بازی می‌کند.</li>
+</ol>
+
+<h2 id="ch1-2">۱.۲ سه لایه معماری: مغز، دست، چشم</h2>
+
+<p>معماری ترکیبی پیشنهادی شما بر پایه یک اصل ساده استوار است: <strong>هر ابزار در کاری که در آن بهترین است تخصص دارد</strong>. تلاش برای اینکه یک ابزار همه‌کاره بسازیم، به سیستم شکنندهٔ متوسط منجر می‌شود. در عوض:</p>
+
+<table>
+<tr><th>لایه</th><th>ابزار</th><th>مسئولیت</th><th>چرا این ابزار؟</th></tr>
+<tr>
+  <td><strong>🧠 مغز و حافظه</strong></td>
+  <td>OpenHuman</td>
+  <td>ذخیرهٔ دائمی داده‌های اداری شما، دسترسی به تقویم/ایمیل/فایل‌ها، ارائهٔ Context به سایر عامل‌ها</td>
+  <td>Memory Tree مارک‌داون قابل‌خواندن، ۱۰۰+ اتصال OAuth، اجرای محلی</td>
+</tr>
+<tr>
+  <td><strong>🦾 دستیار اجرایی</strong></td>
+  <td>Hermes Agent</td>
+  <td>هماهنگی کارها، فراخوانی ابزارها، یادگیری روال‌های جدید به‌صورت Skill</td>
+  <td>Learning Loop خودکار، MCP first-class، Skillهای Markdown</td>
+</tr>
+<tr>
+  <td><strong>📊 دست اکسل</strong></td>
+  <td>mcp-server-excel</td>
+  <td>ساخت/ویرایش/فرمول/PivotTable/نمودار در فایل‌های .xlsx</td>
+  <td>بدون نیاز به نصب Excel، پشتیبانی کامل openpyxl</td>
+</tr>
+<tr>
+  <td><strong>👁️ چشم و دست وب</strong></td>
+  <td>Browser Use</td>
+  <td>لاگین، پرکردن فرم، دانلود، تعامل با سامانه‌های وب</td>
+  <td>Vision + LLM، پشتیبانی از هر مدلی، Playwright زیر پوست</td>
+</tr>
+</table>
+
+<div class="callout callout-tip">
+<strong>💡 چرا این تفکیک مهم است؟</strong>
+اگر همه‌چیز را داخل Hermes بگذاریم، هربار نصب مجدد یا به‌روزرسانی Hermes، حافظه شما در معرض خطر است. اگر همه‌چیز را در OpenHuman بگذاریم، از Learning Loop قدرتمند Hermes محروم می‌شویم. تفکیک به ما اجازه می‌دهد هر ماژول را مستقل به‌روزرسانی، پشتیبان‌گیری یا تعویض کنیم.
+</div>
+
+<h2 id="ch1-3">۱.۳ پروتکل MCP: زبان مشترک ابزارها</h2>
+
+<p><strong>Model Context Protocol</strong> (پروتکل زمینه مدل) که در نوامبر ۲۰۲۴ توسط Anthropic معرفی شد و در ۲۰۲۵-۲۰۲۶ به استاندارد صنعت تبدیل شد، همان چیزی است که «USB-C دنیای هوش مصنوعی» نامیده می‌شود. هر ابزاری که بخواهد به یک LLM متصل شود، به‌جای اینکه یک پلاگین اختصاصی برای ChatGPT، Claude، Hermes و... بنویسد، فقط یک <strong>MCP Server</strong> منتشر می‌کند و همه به آن متصل می‌شوند.</p>
+
+<h3>سه transport برای MCP</h3>
+
+<div class="grid-3">
+  <div class="card">
+    <h4>1. stdio</h4>
+    <p>سرور به‌صورت یک فرآیند محلی روی سیستم شما اجرا می‌شود و از طریق stdin/stdout با کلاینت (Hermes) حرف می‌زند. سریع‌ترین و امن‌ترین گزینه. مناسب برای <code>excel-mcp-server</code>.</p>
+  </div>
+  <div class="card">
+    <h4>2. SSE (منسوخ)</h4>
+    <p>Server-Sent Events روی HTTP. در نسخه‌های جدید MCP توصیه نمی‌شود.</p>
+  </div>
+  <div class="card">
+    <h4>3. Streamable HTTP</h4>
+    <p>روش توصیه‌شده برای اتصالات از راه دور. اگر بخواهید excel-mcp-server را روی یک سرور مرکزی اجرا کنید و از چند کامپیوتر به آن وصل شوید، این گزینه است.</p>
+  </div>
+</div>
+
+<pre><code># فرمت استاندارد پیکربندی یک MCP Server در Hermes (~/.hermes/config.yaml)
+mcp_servers:
+  excel:
+    command: "uvx"
+    args: ["excel-mcp-server", "stdio"]
+    tools:
+      include: [create_workbook, write_data_to_excel, format_range,
+                apply_formula, create_pivot_table, create_chart]
+      prompts: false
+      resources: false</code></pre>
+
+<h2 id="ch1-4">۱.۴ Skill، Memory و Learning Loop</h2>
+
+<p>سه مفهوم بنیادی که کار کردن با این اکوسیستم را ممکن می‌کند:</p>
+
+<h3>Skill (مهارت)</h3>
+<p>یک «مهارت» در Hermes یک پوشه است که داخل آن یک فایل <code>SKILL.md</code> قرار دارد. این فایل دو بخش دارد: (۱) <strong>YAML Frontmatter</strong> که شامل <code>name</code> و <code>description</code> است و به عامل کمک می‌کند بفهمد چه زمانی این مهارت را فراخوانی کند، و (۲) <strong>بدنه Markdown</strong> که شامل دستورالعمل‌های گام‌به‌گام است.</p>
+
+<pre><code>---
+name: monthly-payroll-generator
+description: تولید فیش حقوق ماهانه با محاسبه بیمه، مالیات و اضافه‌کار
+triggers:
+  - "فیش حقوق"
+  - "لیست حقوق"
+  - "payroll"
+---
+
+# مهارت: تولید فیش حقوق ماهانه
+
+## پیش‌نیازها
+- فایل مرجع کارمندان در: `C:\HR\employees.xlsx`
+- نرخ بیمه: ۷٪ سهم کارمند، ۲۳٪ سهم کارفرما
+- نرخ مالیات پلکانی مطابق قانون ۱۴۰۴
+
+## گام‌های اجرایی
+
+1. با ابزار `read_data_from_excel` فایل کارمندان را بخوان
+2. برای هر کارمند حقوق ناخالص = پایه + اضافه‌کار × ۱.۴ محاسبه کن
+3. بیمه = min(حقوق_ناخالص، سقف) × ۰.۰۷
+4. مالیات را از جدول پلکانی حساب کن
+5. با `create_workbook` یک فایل جدید بساز
+6. با `write_data_to_excel` داده‌ها را بنویس
+7. با `format_range` رنگ‌بندی و مرزها را اعمال کن
+8. با `apply_formula` جمع کل ستون‌ها را در ردیف آخر بگذار</code></pre>
+
+<h3>Memory (حافظه)</h3>
+<p>در OpenHuman، حافظه یک <strong>درخت سه‌لایه</strong> است:</p>
+
+<ul>
+  <li><strong>Source Tree:</strong> برای هر منبع داده (Gmail، Slack، Notion...) یک درخت جداگانه با ساختار L0→L1→L2 (خام، خلاصه، فوق‌خلاصه).</li>
+  <li><strong>Topic Tree:</strong> برای هر «موضوع پرحرارت» (مثلاً «حقوق آبان» یا «بیمه احمدی») یک شاخه.</li>
+  <li><strong>Global Tree:</strong> یک گره به‌ازای هر روز UTC که خلاصه‌ای از فعالیت آن روز است.</li>
+</ul>
+
+<p>داده‌ها به قطعات ۳۰۰۰-توکنی تقسیم و به Markdown تبدیل می‌شوند، سپس در SQLite ذخیره و به‌صورت یک <strong>Obsidian Vault</strong> در مسیر <code>~/.openhuman/wiki/</code> mirror می‌شوند. این یعنی شما می‌توانید حافظه عامل را با یک ویرایشگر متن باز کنید و <strong>دستی اصلاح کنید</strong>.</p>
+
+<h3>Learning Loop (حلقه یادگیری)</h3>
+<p>در Hermes، این چهار مرحله است:</p>
+
+<div class="step">
+<span class="step-number">1</span>
+<h4>Task Execution</h4>
+<p>عامل کار شما را انجام می‌دهد و همه‌چیز را در سشن ثبت می‌کند.</p>
+</div>
+
+<div class="step">
+<span class="step-number">2</span>
+<h4>Skill Extraction</h4>
+<p>اگر کار «پیچیده» بود (بیش از ۵ فراخوان ابزار)، Hermes خودش پیشنهاد می‌دهد یک Skill بسازد.</p>
+</div>
+
+<div class="step">
+<span class="step-number">3</span>
+<h4>Skill Improvement</h4>
+<p>در دفعات بعد، اگر Skill شکست خورد یا شما بازخورد منفی دادید، Hermes با <strong>GEPA</strong> (Genetic-Pareto Prompt Evolution) آن را بهبود می‌دهد.</p>
+</div>
+
+<div class="step">
+<span class="step-number">4</span>
+<h4>Skill Retirement</h4>
+<p>Skillهایی که مدت زیادی استفاده نشوند یا نتایج ضعیف بدهند، به‌طور خودکار بازنشسته می‌شوند تا context آلوده نشود.</p>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 2 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل دوم</div>
+  <h1>پیش‌نیازها و آماده‌سازی ویندوز</h1>
+  <div class="chapter-desc">قبل از هر نصب، سیستم را استاندارد و آماده کنیم</div>
+</div>
+
+<h2 id="ch2-1">۲.۱ چک‌لیست سخت‌افزار و نرم‌افزار</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>💻 حداقل توصیه‌شده</h4>
+    <ul>
+      <li>Windows 10 (build 19041+) یا Windows 11</li>
+      <li>CPU: Intel i5 نسل ۱۰+ یا AMD Ryzen 5 5000+</li>
+      <li>RAM: ۱۶ گیگابایت</li>
+      <li>SSD: ۵۰ گیگابایت خالی</li>
+      <li>اینترنت پایدار برای فراخوانی مدل‌های ابری</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>🚀 توصیه شده برای Local LLM</h4>
+    <ul>
+      <li>Windows 11 با آخرین به‌روزرسانی</li>
+      <li>CPU: Intel i7/i9 نسل ۱۲+ یا Ryzen 7/9 7000+</li>
+      <li>RAM: ۳۲ گیگابایت</li>
+      <li>GPU: NVIDIA RTX 4060 (۸GB VRAM) یا بالاتر</li>
+      <li>SSD NVMe با ۱۰۰ گیگابایت خالی</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-warning">
+<strong>⚠️ نکته مهم برای کاربران ایرانی</strong>
+تعدادی از منابع مورد نیاز (npm، PyPI، GitHub Release) گاهی به‌دلیل تحریم‌ها با تأخیر یا خطا پاسخ می‌دهند. توصیه می‌شود قبل از شروع نصب، یک <strong>DNS تمیز</strong> (Shecan یا 403.online) تنظیم کنید یا از یک VPN معتبر استفاده کنید. همچنین برای <code>pip</code> می‌توانید از میرور ایرانی مانند PyPI Iran استفاده کنید.
+</div>
+
+<h2 id="ch2-2">۲.۲ نصب Python 3.12، Node.js، uv</h2>
+
+<h3>Python 3.12</h3>
+<p>Hermes به Python 3.11+ نیاز دارد، Browser Use به 3.11+، excel-mcp-server نیز 3.11+. توصیه ما نصب <strong>Python 3.12.x</strong> است.</p>
+
+<div class="step">
+<span class="step-number">1</span>
+<h4>دانلود</h4>
+<p>به <code>https://www.python.org/downloads/windows/</code> بروید و آخرین نصب‌کننده 3.12 (Windows installer 64-bit) را دانلود کنید.</p>
+</div>
+
+<div class="step">
+<span class="step-number">2</span>
+<h4>نصب</h4>
+<p>هنگام نصب، حتماً تیک <code>Add python.exe to PATH</code> را بزنید. سپس <code>Install Now</code>.</p>
+</div>
+
+<div class="step">
+<span class="step-number">3</span>
+<h4>تأیید</h4>
+<p>در PowerShell:</p>
+<pre><code>python --version
+# خروجی: Python 3.12.x
+pip --version</code></pre>
+</div>
+
+<h3>Node.js LTS</h3>
+<p>برخی MCP Serverها (مثل filesystem و github) به Node نیاز دارند.</p>
+
+<pre><code># با winget (توصیه‌شده)
+winget install OpenJS.NodeJS.LTS
+
+# یا دانلود مستقیم از nodejs.org
+
+# تأیید:
+node --version   # v20.x یا بالاتر
+npm --version</code></pre>
+
+<h3>uv — مدیر بستهٔ فوق‌سریع Python</h3>
+<p>ابزار <code>uv</code> از Astral یک جایگزین صدها برابر سریع‌تر برای pip است و برای اجرای <code>uvx excel-mcp-server</code> نیاز است.</p>
+
+<pre><code># نصب uv در PowerShell:
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# بستن و باز کردن مجدد PowerShell، سپس:
+uv --version
+uvx --version</code></pre>
+
+<h2 id="ch2-3">۲.۳ نصب Git، PowerShell 7، Windows Terminal</h2>
+
+<pre><code># همه با یک دستور:
+winget install Git.Git
+winget install Microsoft.PowerShell
+winget install Microsoft.WindowsTerminal
+
+# پس از نصب:
+git --version
+pwsh --version</code></pre>
+
+<div class="callout callout-tip">
+<strong>💡 توصیه</strong>
+Windows Terminal را باز کنید، Settings → Defaults → Profile: "PowerShell" (نه Windows PowerShell قدیمی). این نسخه ۷ است که با تمام اسکریپت‌های مدرن سازگار است.
+</div>
+
+<h2 id="ch2-4">۲.۴ نصب Ollama برای مدل‌های محلی</h2>
+
+<p>چون شما «ترکیبی از مدل‌های آنلاین و محلی» را انتخاب کرده‌اید، Ollama را نصب می‌کنیم تا مدل‌های محلی مثل <code>qwen2.5:14b</code> یا <code>llama3.3</code> را برای کارهای حساس (که نمی‌خواهید به OpenAI بفرستید) در دسترس داشته باشید.</p>
+
+<div class="step">
+<span class="step-number">1</span>
+<h4>دانلود</h4>
+<p>از <code>https://ollama.com/download/windows</code> نصب‌کننده را بگیرید.</p>
+</div>
+
+<div class="step">
+<span class="step-number">2</span>
+<h4>نصب و راه‌اندازی</h4>
+<pre><code>ollama --version
+
+# دانلود یک مدل مناسب کار اداری فارسی:
+ollama pull qwen2.5:14b-instruct
+# یا سبک‌تر:
+ollama pull qwen2.5:7b-instruct
+
+# تست:
+ollama run qwen2.5:14b-instruct "سلام. یک جمله فارسی بگو."</code></pre>
+</div>
+
+<div class="step">
+<span class="step-number">3</span>
+<h4>API را فعال کنید</h4>
+<p>Ollama به‌طور خودکار روی <code>http://localhost:11434</code> API سرو می‌کند. این آدرس را نگه دارید، در پیکربندی Hermes استفاده می‌شود.</p>
+</div>
+
+<div class="callout callout-info">
+<strong>📊 چرا Qwen 2.5؟</strong>
+مدل‌های Qwen از Alibaba در پردازش زبان‌های غیرانگلیسی (به‌ویژه فارسی و چینی) به‌طور محسوس بهتر از Llama عمل می‌کنند. برای کار با متن‌های فارسی سامانه‌های ایرانی، Qwen انتخاب اول است.
+</div>
+
+<h2 id="ch2-5">۲.۵ تهیه کلیدهای API آنلاین</h2>
+
+<table>
+<tr><th>سرویس</th><th>کاربرد</th><th>هزینه تخمینی ماهانه</th><th>لینک</th></tr>
+<tr><td>Anthropic Claude</td><td>مدل اصلی Hermes برای کارهای پیچیده</td><td>۲۰-۴۰ دلار</td><td>console.anthropic.com</td></tr>
+<tr><td>OpenAI GPT-4/5</td><td>Fallback و مدل vision برای Browser Use</td><td>۱۰-۲۵ دلار</td><td>platform.openai.com</td></tr>
+<tr><td>Google Gemini</td><td>مدل ارزان برای Ingestion در OpenHuman</td><td>۵-۱۵ دلار</td><td>aistudio.google.com</td></tr>
+<tr><td>OpenRouter</td><td>واسط یکپارچه به همه مدل‌ها</td><td>Pay-per-use</td><td>openrouter.ai</td></tr>
+</table>
+
+<div class="callout callout-warning">
+<strong>⚠️ برای کاربران ایرانی</strong>
+دسترسی مستقیم به OpenAI و Anthropic از IP ایران معمولاً محدود است. راهکارها: (۱) استفاده از OpenRouter که دفتر مالی خارج از آمریکا دارد، (۲) استفاده از پروکسی معتبر، (۳) استفاده از سرویس‌های واسط ایرانی مانند Metis AI، آوالای، Gapgpt که کلیدهای رسمی می‌فروشند.
+</div>
+
+<p>پس از دریافت کلیدها، آن‌ها را در یک فایل <code>.env</code> در <code>C:\Users\&lt;YourName&gt;\.hermes\</code> ذخیره کنید:</p>
+
+<pre><code># C:\Users\YourName\.hermes\.env
+ANTHROPIC_API_KEY=sk-ant-xxxxxxx
+OPENAI_API_KEY=sk-proj-xxxxxxx
+GOOGLE_API_KEY=AIzaxxxxxxx
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxx
+BROWSER_USE_API_KEY=bu-xxxxxxx  # اختیاری، برای Browser Use Cloud</code></pre>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 3 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل سوم</div>
+  <h1>نصب و پیکربندی OpenHuman</h1>
+  <div class="chapter-desc">راه‌اندازی مغز مرکزی و حافظه بلندمدت سیستم</div>
+</div>
+
+<h2 id="ch3-1">۳.۱ دانلود و اجرای نصب‌کننده</h2>
+
+<div class="step">
+<span class="step-number">1</span>
+<h4>دانلود</h4>
+<p>به <code>https://tinyhumans.ai/openhuman</code> یا <code>https://github.com/tinyhumansai/openhuman/releases/latest</code> بروید و آخرین نصب‌کننده Windows با پسوند <code>.exe</code> یا <code>.msi</code> را دانلود کنید.</p>
+</div>
+
+<div class="step">
+<span class="step-number">2</span>
+<h4>اجرا</h4>
+<p>روی فایل نصب دابل‌کلیک کنید. Wizard چند مرحله‌ای است:</p>
+<ul>
+  <li>مسیر نصب: <code>C:\Program Files\OpenHuman</code></li>
+  <li>مسیر داده: <code>C:\Users\&lt;YourName&gt;\.openhuman</code></li>
+  <li>Start on Boot: تیک بزنید (سیستم را همیشه در پس‌زمینه فعال نگه می‌دارد)</li>
+</ul>
+</div>
+
+<div class="step">
+<span class="step-number">3</span>
+<h4>اولین اجرا</h4>
+<p>پس از نصب، آیکون OpenHuman در System Tray ظاهر می‌شود. روی آن کلیک راست → Open Dashboard. دنیای اصلی OpenHuman یک وب اپلیکیشن روی <code>http://localhost:7411</code> است.</p>
+</div>
+
+<h2 id="ch3-2">۳.۲ پیکربندی Memory Tree و Obsidian Vault</h2>
+
+<p>پس از ورود، به بخش <strong>Settings → Memory</strong> بروید:</p>
+
+<pre><code># Memory Configuration (~/.openhuman/config.yaml)
+memory:
+  vault_path: "C:\\Users\\YourName\\.openhuman\\wiki"
+  chunk_size: 3000        # حداکثر توکن هر chunk
+  chunk_overlap: 200      # همپوشانی chunkها
+  auto_fetch_interval: 20 # دقیقه (هر ۲۰ دقیقه sync)
+  workers: 3              # تعداد فرآیندهای پس‌زمینه
+  global_digest_time: "00:00"  # UTC
+
+  trees:
+    source: true    # درخت به ازای هر منبع
+    topic: true     # درخت موضوعی
+    global: true    # درخت روزانه
+
+  privacy:
+    encrypt_at_rest: true
+    exclude_patterns:
+      - "*.password*"
+      - "credit_card*"
+      - "کارت_بانکی*"</code></pre>
+
+<div class="callout callout-success">
+<strong>✅ نصب Obsidian (اختیاری اما توصیه‌شده)</strong>
+<code>winget install Obsidian.Obsidian</code> — سپس Obsidian را باز کنید و پوشه <code>C:\Users\YourName\.openhuman\wiki</code> را به‌عنوان vault باز کنید. حالا می‌توانید حافظه عامل را به‌صورت گراف تعاملی ببینید، ویرایش کنید و جستجو کنید.
+</div>
+
+<h2 id="ch3-3">۳.۳ فعال‌سازی Privacy Mode</h2>
+
+<p>چون کار شما شامل داده‌های حساس مالیاتی و بیمه است، Privacy Mode را روشن کنید:</p>
+
+<pre><code># در ~/.openhuman/config.yaml
+privacy_mode:
+  enabled: true
+  llm_provider: "ollama"  # همه inference محلی
+  ollama_url: "http://localhost:11434"
+  ollama_model: "qwen2.5:14b-instruct"
+
+  # داده‌های مالی هرگز به cloud نمی‌رود:
+  sensitive_topics:
+    - "حقوق"
+    - "بیمه"
+    - "مالیات"
+    - "شماره_ملی"
+    - "شماره_حساب"</code></pre>
+
+<p>در این حالت، وقتی دستور شامل کلمات کلیدی حساس باشد، OpenHuman به‌جای فراخوانی Claude یا GPT، مدل محلی Qwen را از Ollama استفاده می‌کند.</p>
+
+<h2 id="ch3-4">۳.۴ اتصال منابع داده اداری</h2>
+
+<p>در Dashboard، به <strong>Integrations</strong> بروید. برای شروع سه اتصال اصلی را برقرار کنید:</p>
+
+<div class="grid-3">
+  <div class="card">
+    <h4>📧 Gmail / Outlook</h4>
+    <p>OAuth کنید. OpenHuman هر ۲۰ دقیقه ایمیل‌های جدید را می‌خواند و اطلاعات کلیدی (اعلان‌های بانک، اطلاعیه‌های بیمه) را در Memory Tree ذخیره می‌کند.</p>
+  </div>
+  <div class="card">
+    <h4>📁 Local Filesystem</h4>
+    <p>یک پوشه اختصاصی برای اسناد اداری معرفی کنید (مثل <code>D:\Office</code>). OpenHuman فایل‌های Excel و PDF را ایندکس می‌کند.</p>
+  </div>
+  <div class="card">
+    <h4>📅 Google Calendar</h4>
+    <p>برای اینکه عامل بداند «سررسید مالیات» یا «مهلت بیمه» کی است.</p>
+  </div>
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 4 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل چهارم</div>
+  <h1>نصب و پیکربندی Hermes Agent</h1>
+  <div class="chapter-desc">راه‌اندازی دستیار اجرایی خودآموز</div>
+</div>
+
+<h2 id="ch4-1">۴.۱ اجرای install.ps1</h2>
+
+<p>یک PowerShell 7 با دسترسی معمول (نه Admin) باز کنید و اجرا کنید:</p>
+
+<pre><code>iex (irm https://hermes-agent.nousresearch.com/install.ps1)</code></pre>
+
+<p>این اسکریپت به‌طور خودکار نصب می‌کند:</p>
+<ul>
+  <li><code>uv</code> (اگر قبلاً نصب نشده)</li>
+  <li>Python 3.11 داخلی</li>
+  <li>Node.js داخلی</li>
+  <li><code>ripgrep</code> برای جستجوی سریع</li>
+  <li><code>ffmpeg</code> برای پردازش صوت/تصویر</li>
+  <li>Git Bash portable در <code>%LOCALAPPDATA%\hermes\git</code></li>
+</ul>
+
+<div class="callout callout-info">
+<strong>ℹ️ نکته</strong>
+هیچ نصب سیستمی رخ نمی‌دهد و همه‌چیز در پروفایل کاربر شما جدا و ایزوله است. اگر روزی خواستید Hermes را حذف کنید، فقط پوشه <code>~/.hermes</code> و <code>%LOCALAPPDATA%\hermes</code> را پاک کنید.
+</div>
+
+<p>پس از پایان نصب، در PowerShell:</p>
+
+<pre><code>hermes --version
+hermes chat</code></pre>
+
+<p>در اولین اجرا، Hermes یک onboarding کوتاه می‌خواهد. کلیدهای API را از فایل <code>.env</code> یا مستقیم وارد کنید.</p>
+
+<h2 id="ch4-2">۴.۲ فایل config.yaml — راهنمای کامل</h2>
+
+<p>مسیر اصلی: <code>C:\Users\&lt;YourName&gt;\.hermes\config.yaml</code></p>
+
+<pre><code># ~/.hermes/config.yaml — پیکربندی جامع
+version: 1
+
+# ---------- مدل اصلی ----------
+model:
+  provider: "anthropic"
+  name: "claude-sonnet-4-5"
+  temperature: 0.2
+  max_tokens: 8192
+
+  # Fallback ها به ترتیب اولویت
+  fallbacks:
+    - provider: "openai"
+      name: "gpt-4.1"
+    - provider: "ollama"
+      name: "qwen2.5:14b-instruct"
+      base_url: "http://localhost:11434"
+
+# ---------- Memory & Skills ----------
+memory:
+  enabled: true
+  storage: "sqlite"
+  path: "~/.hermes/memory.db"
+
+  # جستجوی متن کامل
+  fts5_enabled: true
+
+  # خلاصه‌سازی سشن با LLM
+  summarization:
+    enabled: true
+    model: "gpt-4.1-mini"
+    trigger_token_count: 10000
+
+skills:
+  enabled: true
+  auto_create: true       # پس از کار پیچیده، خودش Skill بسازد
+  auto_improve: true      # Learning Loop
+  complexity_threshold: 5 # حداقل ۵ tool call برای پیشنهاد ساخت
+  path: "~/.hermes/skills"
+
+  # GEPA برای بهبود خودکار
+  gepa:
+    enabled: true
+    population_size: 4
+    generations: 3
+
+# ---------- MCP Servers ----------
+mcp_servers:
+  # ماژول اکسل — فصل ۵ بحث می‌شود
+  excel:
+    command: "uvx"
+    args: ["excel-mcp-server", "stdio"]
+    tools:
+      include:
+        - create_workbook
+        - create_worksheet
+        - write_data_to_excel
+        - read_data_from_excel
+        - format_range
+        - apply_formula
+        - create_chart
+        - create_pivot_table
+        - create_table
+      prompts: false
+
+  # ماژول مرورگر — فصل ۶ بحث می‌شود
+  browser:
+    command: "python"
+    args: ["-m", "browser_use.mcp"]
+    env:
+      BROWSER_USE_API_KEY: "${env:BROWSER_USE_API_KEY}"
+    tools:
+      exclude: []
+
+  # پل ارتباطی به OpenHuman — فصل ۷ بحث می‌شود
+  openhuman:
+    url: "http://localhost:7411/mcp"
+    headers:
+      Authorization: "Bearer ${env:OPENHUMAN_TOKEN}"
+    tools:
+      include:
+        - query_memory
+        - get_recent_emails
+        - get_calendar_events
+
+  # فایل‌سیستم (رسمی MCP)
+  filesystem:
+    command: "npx"
+    args:
+      - "-y"
+      - "@modelcontextprotocol/server-filesystem"
+      - "D:\\Office"
+
+# ---------- Session ----------
+session:
+  history_limit: 50
+  auto_save: true
+
+# ---------- Logging ----------
+logging:
+  level: "info"
+  path: "~/.hermes/logs"
+  rotation: "daily"</code></pre>
+
+<h2 id="ch4-3">۴.۳ اتصال Hermes به مدل ترکیبی (Cloud + Local)</h2>
+
+<p>راهبرد ترکیبی که ما انتخاب کرده‌ایم: <strong>مدل ابری قوی برای استدلال، مدل محلی برای داده‌های حساس</strong>.</p>
+
+<div class="arch-diagram">
+  <div class="arch-box">📥 دستور کاربر</div>
+  <div class="arch-arrow">↓</div>
+  <div class="arch-box">🔍 Router (بررسی کلمات حساس)</div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box" style="border-color: #dc2626;">🔒 داده حساس → Ollama Qwen</div>
+    <div class="arch-box" style="border-color: #059669;">☁️ داده عمومی → Claude</div>
+  </div>
+</div>
+
+<p>در Hermes، این با <code>routing_rules</code> پیاده می‌شود:</p>
+
+<pre><code># اضافه به config.yaml
+routing:
+  enabled: true
+  rules:
+    - name: "sensitive-financial"
+      keywords:
+        - "شماره_حساب"
+        - "کارت_بانکی"
+        - "شماره_ملی"
+        - "حقوق"
+      route_to:
+        provider: "ollama"
+        name: "qwen2.5:14b-instruct"
+
+    - name: "iranian-systems"
+      keywords:
+        - "tax.gov.ir"
+        - "tamin.ir"
+        - "اظهارنامه"
+      route_to:
+        provider: "openai"
+        name: "gpt-4.1"
+        # چون قوی‌ترین در پردازش وب فارسی است
+
+    - name: "default"
+      route_to:
+        provider: "anthropic"
+        name: "claude-sonnet-4-5"</code></pre>
+
+<h2 id="ch4-4">۴.۴ فعال‌سازی Learning Loop</h2>
+
+<p>پس از پیکربندی، از داخل Hermes chat بگویید:</p>
+
+<pre><code>hermes chat
+
+You: skill review
+
+# Hermes لیست Skillهای فعلی را نشان می‌دهد
+# می‌توانید manually یک Skill بسازید:
+
+You: /skill new payroll-generator
+
+# سپس markdown را ویرایش کنید</code></pre>
+
+<div class="callout callout-tip">
+<strong>💡 نکته کلیدی</strong>
+Skill های اولیه را <strong>خودتان</strong> با کمک Hermes بسازید. برای این کار، یک بار کاری را دستی با گفتگو انجام دهید (مثلاً محاسبه فیش حقوق یک نفر). در پایان بگویید: «این کار را به‌عنوان یک Skill به نام <code>calc-single-payroll</code> ذخیره کن». Hermes از تاریخچه سشن یک SKILL.md خوب می‌سازد.
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 5 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل پنجم</div>
+  <h1>نصب و پیکربندی mcp-server-excel</h1>
+  <div class="chapter-desc">دست اکسل هوشمند برای اسناد پرداخت پیچیده</div>
+</div>
+
+<h2 id="ch5-1">۵.۱ نصب با uvx و پیکربندی مسیر فایل‌ها</h2>
+
+<p>خبر خوب: چون <code>uv</code> نصب است، نصب <code>excel-mcp-server</code> فقط یک دستور است — در واقع اصلاً نصب دائم نمی‌شود. <code>uvx</code> در پس‌زمینه یک محیط مجازی موقت می‌سازد و پکیج را در آن اجرا می‌کند.</p>
+
+<pre><code># تست دستی (بدون Hermes)
+uvx excel-mcp-server --help
+
+# نسخه کامل با HTTP transport برای دسترسی از راه دور:
+$env:EXCEL_FILES_PATH = "D:\Office\Excel"
+$env:FASTMCP_PORT = "8017"
+uvx excel-mcp-server streamable-http</code></pre>
+
+<h3>پیکربندی متغیرهای محیطی</h3>
+
+<table>
+<tr><th>متغیر</th><th>توضیح</th><th>مثال</th></tr>
+<tr><td><code>EXCEL_FILES_PATH</code></td><td>ریشه پوشه‌ای که فایل‌های اکسل خوانده/نوشته می‌شوند</td><td><code>D:\Office\Excel</code></td></tr>
+<tr><td><code>FASTMCP_PORT</code></td><td>پورت HTTP (اگر transport = http)</td><td><code>8017</code></td></tr>
+<tr><td><code>PYTHONIOENCODING</code></td><td>برای متن فارسی، حتماً UTF-8</td><td><code>utf-8</code></td></tr>
+</table>
+
+<h2 id="ch5-2">۵.۲ اتصال به Hermes از طریق mcp_servers</h2>
+
+<p>در <code>~/.hermes/config.yaml</code> که در فصل ۴ ساختیم، بخش <code>excel</code> از قبل هست. اما بیایید یک نسخه پیشرفته‌تر با پارامترهای بیشتر بنویسیم:</p>
+
+<pre><code>mcp_servers:
+  excel:
+    command: "uvx"
+    args: ["excel-mcp-server", "stdio"]
+    env:
+      PYTHONIOENCODING: "utf-8"
+    tools:
+      include:
+        # Workbook
+        - create_workbook
+        - create_worksheet
+        - get_workbook_metadata
+
+        # Data I/O
+        - write_data_to_excel
+        - read_data_from_excel
+
+        # Formatting
+        - format_range
+        - merge_cells
+        - unmerge_cells
+
+        # Formulas
+        - apply_formula
+        - validate_formula_syntax
+
+        # Charts & Pivot
+        - create_chart
+        - create_pivot_table
+        - create_table
+
+        # Worksheet ops
+        - copy_worksheet
+        - delete_worksheet
+        - rename_worksheet
+
+        # Range ops
+        - copy_range
+        - delete_range
+
+        # Rows/Cols
+        - insert_rows
+        - insert_columns
+        - delete_sheet_rows
+        - delete_sheet_columns
+      prompts: false
+      resources: false</code></pre>
+
+<p>Hermes را ری‌استارت کنید:</p>
+
+<pre><code>hermes mcp list
+# باید ببینید:
+# excel  ✓ connected  (20+ tools)
+
+hermes chat
+You: /tools
+# لیست کامل ابزارها را نمایش می‌دهد</code></pre>
+
+<h2 id="ch5-3">۵.۳ تست عملی: ساخت اولین فیش حقوق</h2>
+
+<p>بیایید یک آزمایش عملی انجام دهیم:</p>
+
+<pre><code>hermes chat
+
+You: یک فایل اکسل به نام payroll_1405_04.xlsx در D:\Office\Excel
+     بساز. یک sheet به نام "فیش‌ها" داشته باشد با ستون‌های:
+     ردیف، نام، پایه، اضافه‌کار، ناخالص، بیمه ۷٪، مالیات، خالص.
+     ۳ کارمند نمونه اضافه کن:
+     - علی احمدی: پایه ۱۵۰,۰۰۰,۰۰۰، اضافه‌کار ۲۰,۰۰۰,۰۰۰
+     - سارا رضایی: پایه ۱۸۰,۰۰۰,۰۰۰، اضافه‌کار ۰
+     - محمد کریمی: پایه ۱۲۰,۰۰۰,۰۰۰، اضافه‌کار ۱۵,۰۰۰,۰۰۰
+     فرمول بیمه ۷٪ ناخالص و مالیات پلکانی ایران ۱۴۰۵ را اعمال کن.
+     رنگ هدر آبی، اعداد سه‌رقم‌جداکن، ردیف جمع در آخر.</code></pre>
+
+<p>Hermes به‌طور خودکار این دنباله از فراخوانی‌های ابزار را انجام می‌دهد:</p>
+
+<ol>
+  <li><code>create_workbook(filepath="D:\Office\Excel\payroll_1405_04.xlsx")</code></li>
+  <li><code>create_worksheet(filepath=..., sheet_name="فیش‌ها")</code></li>
+  <li><code>write_data_to_excel(...)</code> با یک لیست دیکشنری از ۳ کارمند</li>
+  <li><code>apply_formula(cell="F2", formula="=E2*0.07")</code> ۳ بار برای ۳ ردیف</li>
+  <li><code>apply_formula(cell="G2", formula="=IF(E2<=200000000,E2*0.1,20000000+(E2-200000000)*0.15)")</code></li>
+  <li><code>apply_formula(cell="H2", formula="=E2-F2-G2")</code></li>
+  <li><code>format_range(start_cell="A1", end_cell="H1", bold=true, bg_color="#3730a3", font_color="#FFFFFF")</code></li>
+  <li><code>format_range(start_cell="C2", end_cell="H4", number_format="#,##0")</code></li>
+  <li><code>apply_formula(cell="C5", formula="=SUM(C2:C4)")</code> و ...</li>
+</ol>
+
+<div class="callout callout-success">
+<strong>🎉 نتیجه</strong>
+یک فایل اکسل کامل، فرموله، قالب‌بندی‌شده در کمتر از ۳۰ ثانیه. حالا در Hermes بگویید: «این کار را به‌عنوان Skill به نام <code>generate-payroll-template</code> ذخیره کن». Hermes یک SKILL.md می‌سازد و از این به بعد فقط کافی است بگویید «فیش حقوق مرداد را بساز» تا خودش همه گام‌ها را دنبال کند.
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 6 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل ششم</div>
+  <h1>نصب و پیکربندی Browser Use</h1>
+  <div class="chapter-desc">دستیار وب برای سامانه‌های بیمه، مالیات و فاقد API</div>
+</div>
+
+<h2 id="ch6-1">۶.۱ نصب کتابخانه و اتصال به مدل</h2>
+
+<pre><code># در PowerShell:
+uv pip install browser-use --python 3.12
+
+# نصب مرورگر Playwright که Browser Use از آن استفاده می‌کند:
+uv run playwright install chromium
+
+# تست اولیه:
+python -c "from browser_use import Agent; print('OK')"</code></pre>
+
+<h3>اولین برنامه</h3>
+
+<p>یک فایل به نام <code>test_browser.py</code> بسازید:</p>
+
+<pre><code>import asyncio
+from browser_use import Agent, ChatBrowserUse
+# یا از OpenAI/Claude:
+# from browser_use.llm import ChatOpenAI, ChatAnthropic
+
+async def main():
+    # اتصال ساده به مدل
+    llm = ChatBrowserUse(model='anthropic/claude-sonnet-4-6')
+    # جایگزین: llm = ChatOpenAI(model='gpt-4.1')
+
+    agent = Agent(
+        task="به سایت digikala.com برو، در جستجو 'مانیتور ۲۴ اینچ' را جست‌وجو کن، "
+             "و قیمت اولین سه محصول را برایم چاپ کن.",
+        llm=llm,
+    )
+
+    result = await agent.run()
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+
+<pre><code>python test_browser.py</code></pre>
+
+<h2 id="ch6-2">۶.۲ استفاده از پروفایل Chrome برای احراز هویت</h2>
+
+<p>سامانه‌های <code>tamin.ir</code> و <code>tax.gov.ir</code> نیاز به <strong>لاگین با نام کاربری، رمز، و گاهی OTP پیامکی</strong> دارند. Browser Use می‌تواند از پروفایل موجود Chrome شما استفاده کند تا هربار نیاز به لاگین دستی نباشد:</p>
+
+<pre><code>from browser_use import Agent, Browser, BrowserProfile
+
+# پروفایل موجود Chrome شما (که قبلاً لاگین شده)
+profile = BrowserProfile(
+    user_data_dir=r"C:\Users\YourName\AppData\Local\Google\Chrome\User Data",
+    profile_directory="Default",
+    headless=False,   # می‌خواهیم ببینیم
+)
+
+browser = Browser(profile=profile)
+
+agent = Agent(
+    task="در tamin.ir لیست بیمه ماه جاری را دانلود کن",
+    llm=llm,
+    browser=browser,
+)</code></pre>
+
+<div class="callout callout-warning">
+<strong>⚠️ مهم</strong>
+قبل از اجرای Browser Use با پروفایل Chrome شخصی، حتماً همه پنجره‌های Chrome را ببندید. Playwright نمی‌تواند پروفایلی را که در حال استفاده است باز کند.
+</div>
+
+<h3>راهکار جایگزین: پروفایل اختصاصی</h3>
+
+<pre><code>from browser_use import Browser, BrowserProfile
+
+# یک پروفایل جدید فقط برای عامل بسازید:
+profile = BrowserProfile(
+    user_data_dir=r"D:\Office\browser_profile_agent",
+    headless=False,
+)
+
+# بار اول: خودتان لاگین کنید، سپس ذخیره می‌شود.
+# بارهای بعد: عامل با همان پروفایل لاگین می‌ماند.</code></pre>
+
+<h2 id="ch6-3">۶.۳ ارائه Browser Use به‌عنوان MCP Server</h2>
+
+<p>برای اینکه Hermes بتواند از Browser Use استفاده کند، آن را به‌صورت MCP server در می‌آوریم. یک اسکریپت <code>browser_mcp.py</code> بسازید:</p>
+
+<pre><code>"""
+سرور MCP سفارشی که Browser Use را wrap می‌کند.
+مسیر: D:\Office\mcp\browser_mcp.py
+"""
+import asyncio
+from mcp.server.fastmcp import FastMCP
+from browser_use import Agent, Browser, BrowserProfile
+from browser_use.llm import ChatOpenAI
+
+mcp = FastMCP("browser-use")
+
+# پروفایل مشترک بین همه فراخوانی‌ها
+_profile = BrowserProfile(
+    user_data_dir=r"D:\Office\browser_profile_agent",
+    headless=False,
+)
+
+@mcp.tool()
+async def browse_and_do(task: str, url: str = None) -> str:
+    """
+    یک کار در مرورگر انجام بده.
+
+    Args:
+        task: توصیف کاری که باید انجام شود
+        url: URL شروع (اختیاری)
+    """
+    llm = ChatOpenAI(model="gpt-4.1")
+    browser = Browser(profile=_profile)
+
+    full_task = task
+    if url:
+        full_task = f"ابتدا به {url} برو. سپس: {task}"
+
+    agent = Agent(task=full_task, llm=llm, browser=browser)
+    result = await agent.run(max_steps=25)
+
+    return str(result)
+
+@mcp.tool()
+async def download_from_web(url: str, save_path: str) -> str:
+    """فایل را از URL دانلود و در save_path ذخیره کن."""
+    # پیاده‌سازی...
+    pass
+
+@mcp.tool()
+async def extract_table_from_page(url: str, description: str) -> list:
+    """
+    از یک صفحه وب یک جدول را استخراج کن.
+    description: توصیف اینکه چه جدولی می‌خواهیم
+    """
+    llm = ChatOpenAI(model="gpt-4.1")
+    browser = Browser(profile=_profile)
+
+    task = f"به {url} برو. جدول {description} را پیدا کن " \
+           "و به‌صورت JSON [{ستون: مقدار}, ...] برگردان."
+
+    agent = Agent(task=task, llm=llm, browser=browser)
+    result = await agent.run(max_steps=15)
+    return result
+
+if __name__ == "__main__":
+    mcp.run()</code></pre>
+
+<p>سپس در <code>~/.hermes/config.yaml</code>:</p>
+
+<pre><code>mcp_servers:
+  browser:
+    command: "python"
+    args: ["D:\\Office\\mcp\\browser_mcp.py"]
+    env:
+      OPENAI_API_KEY: "${env:OPENAI_API_KEY}"
+    tools:
+      include:
+        - browse_and_do
+        - download_from_web
+        - extract_table_from_page</code></pre>
+
+<h2 id="ch6-4">۶.۴ چالش CAPTCHA در سامانه‌های ایرانی</h2>
+
+<p>سامانه‌های ایرانی معمولاً از CAPTCHA ساده متنی (نه reCAPTCHA پیشرفته) استفاده می‌کنند. راهکارها:</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>🤖 حل خودکار با Vision Model</h4>
+    <p>GPT-4o یا Claude Sonnet با vision می‌توانند CAPTCHAهای ساده را با دقت بالای ۹۰٪ بخوانند. Browser Use به‌طور خودکار از vision استفاده می‌کند اگر مدل vision-capable باشد.</p>
+  </div>
+  <div class="card">
+    <h4>👤 Human-in-the-Loop</h4>
+    <p>برای CAPTCHAهای سخت، <code>headless=False</code> بگذارید و به مدل بگویید در صورت رسیدن به CAPTCHA، توقف کند و منتظر انسان بماند. Hermes یک نوتیفیکیشن به شما می‌فرستد.</p>
+  </div>
+</div>
+
+<pre><code># نسخه دستی حل CAPTCHA
+agent = Agent(
+    task="""
+    در tax.gov.ir لاگین کن.
+    اگر به CAPTCHA رسیدی:
+      1. تصویر CAPTCHA را با ابزار vision بخوان
+      2. اگر مطمئن نبودی (confidence < 0.85)، منتظر بمان و از کاربر بپرس
+    """,
+    llm=llm,
+    browser=browser,
+    use_vision=True,
+    max_actions_per_step=1,  # هر action منتظر تأیید انسان
+)</code></pre>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 7 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل هفتم</div>
+  <h1>معماری ترکیبی نهایی و جریان اطلاعات</h1>
+  <div class="chapter-desc">چگونه چهار ماژول با هم یک ارگانیسم واحد می‌شوند</div>
+</div>
+
+<h2 id="ch7-1">۷.۱ نقشه جامع سیستم</h2>
+
+<div class="arch-diagram">
+  <div style="margin-bottom: 20px;">
+    <div class="arch-box" style="background: #dbeafe; border-color: #2563eb;">👤 کاربر (شما)</div>
+  </div>
+  <div class="arch-arrow">↓ دستور طبیعی فارسی ↓</div>
+  <div style="margin: 20px 0;">
+    <div class="arch-box" style="background: #fef3c7; border-color: #d97706;">🤖 Hermes Agent<br><small>(هماهنگ‌کننده و اجرا)</small></div>
+  </div>
+  <div class="arch-arrow">⇅ MCP Protocol ⇅</div>
+  <div style="margin: 20px 0;">
+    <div class="arch-box" style="background: #ede9fe; border-color: #7c3aed;">🧠 OpenHuman<br><small>(حافظه بلندمدت)</small></div>
+    <div class="arch-box" style="background: #d1fae5; border-color: #059669;">📊 mcp-excel<br><small>(اکسل)</small></div>
+    <div class="arch-box" style="background: #fee2e2; border-color: #dc2626;">🌐 Browser Use<br><small>(مرورگر)</small></div>
+    <div class="arch-box" style="background: #e0e7ff; border-color: #4338ca;">📁 Filesystem MCP</div>
+  </div>
+  <div class="arch-arrow">↓ نتایج ↓</div>
+  <div>
+    <div class="arch-box">📄 xlsx فایل</div>
+    <div class="arch-box">📮 ثبت در tamin.ir</div>
+    <div class="arch-box">💾 مهارت جدید ذخیره‌شده</div>
+    <div class="arch-box">📊 گزارش نهایی</div>
+  </div>
+</div>
+
+<h2 id="ch7-2">۷.۲ پل ارتباطی OpenHuman ↔ Hermes</h2>
+
+<p>سؤال کلیدی: چگونه Hermes به حافظه OpenHuman دسترسی داشته باشد؟</p>
+
+<p>OpenHuman از v2.x یک <strong>MCP endpoint داخلی</strong> در <code>http://localhost:7411/mcp</code> ارائه می‌دهد. کافی است در Hermes یک ورودی اضافه کنیم:</p>
+
+<pre><code># ~/.hermes/config.yaml
+mcp_servers:
+  openhuman:
+    url: "http://localhost:7411/mcp"
+    headers:
+      Authorization: "Bearer ${env:OPENHUMAN_TOKEN}"
+    tools:
+      include:
+        - query_memory       # جستجو در Memory Tree
+        - get_recent_emails  # ایمیل‌های اخیر
+        - get_calendar_events
+        - get_files_in_folder
+        - append_note         # یادداشت جدید
+        - search_wiki         # جستجو در Obsidian vault</code></pre>
+
+<p>توکن <code>OPENHUMAN_TOKEN</code> را از Dashboard OpenHuman → Settings → API Access دریافت کنید و در <code>.env</code> ذخیره کنید.</p>
+
+<h3>الگوی استفاده متقابل</h3>
+
+<pre><code># نمونه گفتگو با Hermes که از OpenHuman استفاده می‌کند:
+
+You: فیش حقوق مرداد ۱۴۰۵ را بساز.
+
+Hermes internally:
+  1. call openhuman.query_memory("لیست کارمندان فعلی")
+     → دریافت لیست ۵۰ کارمند + پایه حقوق هر یک
+  2. call openhuman.get_recent_emails(filter="اضافه‌کار مرداد")
+     → دریافت ایمیل مدیر عامل با ساعات اضافه‌کار
+  3. call excel.create_workbook(...)
+  4. call excel.write_data_to_excel(...)
+  5. ...
+  6. call openhuman.append_note("فیش حقوق مرداد ساخته شد. مسیر: ...")
+     → ذخیره در Memory Tree برای دفعات بعد</code></pre>
+
+<h2 id="ch7-3">۷.۳ چرخهٔ کامل: ورود دستور تا خروجی نهایی</h2>
+
+<div class="step">
+<span class="step-number">1</span>
+<h4>دریافت دستور</h4>
+<p>شما در Hermes chat می‌نویسید: «فیش‌های حقوق مرداد ۱۴۰۵ را بساز و در tamin.ir لیست بیمه را ثبت کن.»</p>
+</div>
+
+<div class="step">
+<span class="step-number">2</span>
+<h4>Routing</h4>
+<p>Hermes چون کلمه «بیمه» و «حقوق» را می‌بیند، طبق قوانین routing به مدل امن‌تر (Ollama Qwen یا Claude با privacy=true) می‌فرستد.</p>
+</div>
+
+<div class="step">
+<span class="step-number">3</span>
+<h4>Skill Matching</h4>
+<p>Hermes در پوشه <code>~/.hermes/skills</code> جست‌وجو می‌کند. Skill های <code>generate-payroll-template</code> و <code>submit-tamin-list</code> match می‌شوند. دستورالعمل آن‌ها به context اضافه می‌شود.</p>
+</div>
+
+<div class="step">
+<span class="step-number">4</span>
+<h4>Memory Retrieval</h4>
+<p>Hermes از <code>openhuman.query_memory</code> اطلاعات مورد نیاز (لیست کارمندان، ساعات اضافه‌کار، شماره بیمه‌ها) را می‌خواند.</p>
+</div>
+
+<div class="step">
+<span class="step-number">5</span>
+<h4>Excel Generation</h4>
+<p>Hermes با فراخوانی سری از ابزارهای <code>excel.*</code>، فایل .xlsx را می‌سازد.</p>
+</div>
+
+<div class="step">
+<span class="step-number">6</span>
+<h4>Browser Automation</h4>
+<p>Hermes از <code>browser.browse_and_do</code> استفاده می‌کند و می‌گوید: «به tamin.ir لاگین کن، لیست بیمه ماه جاری را با فایل D:\...\payroll.xlsx ثبت کن.» Browser Use گام‌به‌گام صفحات را می‌بیند، کلیک می‌کند، فرم پر می‌کند.</p>
+</div>
+
+<div class="step">
+<span class="step-number">7</span>
+<h4>Verification</h4>
+<p>پس از ثبت، Browser Use screenshot می‌گیرد و شماره پیگیری را استخراج می‌کند.</p>
+</div>
+
+<div class="step">
+<span class="step-number">8</span>
+<h4>Memory Update</h4>
+<p>نتیجه (شماره پیگیری، مسیر فایل، خلاصه) به OpenHuman فرستاده می‌شود تا در Memory Tree ذخیره شود.</p>
+</div>
+
+<div class="step">
+<span class="step-number">9</span>
+<h4>Skill Improvement</h4>
+<p>اگر در طول کار خطایی رخ داد و شما اصلاح کردید، Hermes بازخورد شما را ثبت و در نسخه بعدی Skill اعمال می‌کند.</p>
+</div>
+
+<h2 id="ch7-4">۷.۴ الگوی داده‌ای مشترک</h2>
+
+<p>برای اینکه چهار ماژول با هم صحبت کنند، یک <strong>Schema داده‌ای مشترک</strong> تعریف می‌کنیم. این را در OpenHuman → Wiki → <code>schema/</code> ذخیره کنید:</p>
+
+<pre><code># schema/employee.md
+---
+id: EMP{{national_id}}
+type: employee
+---
+
+## نام: {{full_name}}
+## شماره ملی: {{national_id}}
+## کد بیمه: {{insurance_code}}
+## پایه حقوق: {{base_salary}}
+## سمت: {{position}}
+## تاریخ استخدام: {{hire_date}}
+## شماره حساب: {{account_number}}
+
+## تاریخچه حقوق
+| ماه | حقوق ناخالص | خالص |
+|------|-------------|------|
+| فروردین ۱۴۰۵ | 165,000,000 | 148,500,000 |
+| اردیبهشت ۱۴۰۵ | 170,000,000 | 153,000,000 |
+...</code></pre>
+
+<p>حالا وقتی Hermes از OpenHuman می‌پرسد «کارمندان فعال؟»، نتیجه ساختاریافته برمی‌گردد و مستقیم به Excel و Browser Use قابل انتقال است.</p>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 8 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل هشتم</div>
+  <h1>سناریوهای عملی برای کارهای اداری ایرانی</h1>
+  <div class="chapter-desc">چهار workflow کامل که همین امروز می‌توانید پیاده کنید</div>
+</div>
+
+<h2 id="ch8-1">۸.۱ سناریو ۱: تولید فیش حقوق ماهانه</h2>
+
+<h3>پیش‌نیازها</h3>
+<ul>
+  <li>فایل <code>D:\Office\Excel\employees_master.xlsx</code> با ستون‌های: کد ملی، نام، پایه، بیمه، مالیات معاف</li>
+  <li>یک Skill پیش‌ساخته به نام <code>generate-monthly-payroll</code></li>
+</ul>
+
+<h3>SKILL.md کامل</h3>
+
+<pre><code>---
+name: generate-monthly-payroll
+description: تولید کامل فیش‌های حقوق ماهانه با محاسبه بیمه (۷٪ کارمند، ۲۳٪ کارفرما)، مالیات پلکانی ایران، عیدی، حق مسکن، خواروبار، و گزارش تجمعی
+triggers:
+  - "فیش حقوق"
+  - "لیست حقوق"
+  - "payroll"
+  - "حقوق ماه"
+parameters:
+  month_name: string  # مثلاً "مرداد ۱۴۰۵"
+  overtime_data: dict  # اختیاری، از ایمیل خوانده می‌شود
+---
+
+# مهارت: تولید فیش حقوق ماهانه
+
+## قوانین مالیاتی ۱۴۰۵
+- تا ۲۰۰,۰۰۰,۰۰۰ ریال: معاف
+- ۲۰۰-۴۰۰ میلیون: ۱۰٪
+- ۴۰۰-۶۰۰ میلیون: ۱۵٪
+- ۶۰۰-۸۰۰ میلیون: ۲۰٪
+- بیش از ۸۰۰: ۲۵٪ + ۳۰٪
+
+## گام‌ها
+
+### گام ۱: دریافت داده کارمندان
+از OpenHuman:
+```
+openhuman.query_memory("employees where status=active")
+```
+
+### گام ۲: دریافت اضافه‌کار از ایمیل
+```
+openhuman.get_recent_emails(
+    filter="اضافه‌کار ${month_name}",
+    max_days=30
+)
+```
+
+### گام ۳: ساخت فایل اکسل
+```
+excel.create_workbook(
+    filepath="D:\\Office\\Excel\\payroll_${month_name}.xlsx"
+)
+excel.create_worksheet(
+    filepath=...,
+    sheet_name="فیش‌ها"
+)
+```
+
+### گام ۴: نوشتن هدر
+ستون‌ها: ردیف | کد ملی | نام | پایه | اضافه‌کار | ناخالص | بیمه ۷٪ | مالیات | عیدی | خالص
+
+### گام ۵: نوشتن داده هر کارمند
+برای هر کارمند:
+```
+gross = base + overtime * 1.4
+insurance = min(gross, 200_000_000) * 0.07
+tax = calc_tax_iran_1405(gross)
+net = gross - insurance - tax
+```
+
+### گام ۶: قالب‌بندی
+```
+excel.format_range(
+    start_cell="A1", end_cell="J1",
+    bold=true, bg_color="#1e3a8a",
+    font_color="#FFFFFF", alignment="center"
+)
+excel.format_range(
+    start_cell="D2", end_cell="J{last}",
+    number_format="#,##0"
+)
+```
+
+### گام ۷: ردیف جمع کل
+```
+excel.apply_formula(cell="F{last+1}", formula="=SUM(F2:F{last})")
+# برای ستون‌های ناخالص، بیمه، مالیات، خالص
+```
+
+### گام ۸: نمودار توزیع
+```
+excel.create_chart(
+    data_range="C1:C{last}, J1:J{last}",
+    chart_type="bar",
+    target_cell="L2",
+    title="خالص حقوق کارمندان ${month_name}"
+)
+```
+
+### گام ۹: ذخیره در حافظه
+```
+openhuman.append_note(
+    title="Payroll ${month_name}",
+    content="فایل: D:\\Office\\Excel\\payroll_${month_name}.xlsx"
+)
+```
+
+## تست
+همیشه آخر کار، جمع خالص را با میانگین ماه قبل مقایسه کن.
+اگر بیش از ۱۵٪ تفاوت داشت، هشدار بده.</code></pre>
+
+<h3>اجرای عملی</h3>
+
+<pre><code>hermes chat
+You: فیش حقوق مرداد ۱۴۰۵ را بساز.</code></pre>
+
+<p>Hermes به‌طور خودکار Skill را match می‌کند، همه گام‌ها را اجرا می‌کند و در پایان:</p>
+
+<pre><code>Hermes: ✅ فیش حقوق مرداد ۱۴۰۵ ساخته شد.
+📄 مسیر: D:\Office\Excel\payroll_مرداد_1405.xlsx
+👥 تعداد کارمند: ۵۰
+💰 جمع خالص: ۸,۴۵۰,۰۰۰,۰۰۰ ریال (۷.۲٪ بیشتر از ماه قبل)
+📊 نمودار توزیع در sheet "فیش‌ها" ستون L
+⚠️ ۲ کارمند اضافه‌کار داشتند اما در ایمیل ذکر نشده بود:
+   - علی رضایی (بر اساس سابقه ماه‌های قبل)
+   - سارا مرادی
+   لطفاً بررسی کنید.</code></pre>
+
+<h2 id="ch8-2">۸.۲ سناریو ۲: ثبت لیست بیمه در tamin.ir</h2>
+
+<p>پس از تولید فایل حقوق، مرحله بعد ارسال لیست بیمه به سازمان تأمین اجتماعی است.</p>
+
+<h3>Skill: submit-tamin-list</h3>
+
+<pre><code>---
+name: submit-tamin-list
+description: ثبت لیست بیمه ماهانه در سامانه tamin.ir با استفاده از فایل حقوق موجود
+triggers:
+  - "ثبت لیست بیمه"
+  - "ارسال به تامین اجتماعی"
+  - "tamin"
+---
+
+# مهارت: ثبت لیست بیمه در tamin.ir
+
+## پیش‌نیازها
+- فایل حقوق ماه جاری در `D:\Office\Excel\payroll_*.xlsx`
+- پروفایل مرورگر آماده در `D:\Office\browser_profile_agent`
+- کاربر قبلاً حداقل یک بار در tamin.ir لاگین کرده است
+
+## گام‌ها
+
+### گام ۱: تولید فایل استاندارد DSK
+tamin.ir فرمت خاصی به نام DSK (فایل متنی با طول ثابت) می‌خواهد.
+
+```
+excel.read_data_from_excel(
+    filepath="D:\\Office\\Excel\\payroll_${month}.xlsx",
+    sheet_name="فیش‌ها"
+)
+```
+
+سپس با یک تابع کمکی به DSK تبدیل کن و در
+`D:\Office\Tamin\DSK_${month}.dsk` ذخیره کن.
+
+### گام ۲: باز کردن سامانه
+```
+browser.browse_and_do(
+    url="https://eservices.tamin.ir/",
+    task="اگر لاگین نیستی، لاگین کن.
+          سپس به بخش 'ارسال لیست ماهانه' برو."
+)
+```
+
+### گام ۳: آپلود فایل
+```
+browser.browse_and_do(
+    task="روی 'انتخاب فایل' کلیک کن و
+          D:\\Office\\Tamin\\DSK_${month}.dsk را انتخاب کن.
+          دکمه 'بررسی اولیه' را بزن."
+)
+```
+
+### گام ۴: بررسی خطاها
+```
+browser.extract_table_from_page(
+    description="جدول خطاهای فایل DSK"
+)
+```
+
+اگر خطا بود، برگرد به گام ۱ و اصلاح کن.
+
+### گام ۵: تأیید نهایی و ثبت
+```
+browser.browse_and_do(
+    task="دکمه 'تأیید و ارسال نهایی' را بزن.
+          شماره پیگیری را از صفحه بعدی استخراج کن."
+)
+```
+
+### گام ۶: ذخیره رسید
+- Screenshot از صفحه رسید در `D:\Office\Tamin\receipts\`
+- شماره پیگیری در Memory Tree
+</code></pre>
+
+<div class="callout callout-danger">
+<strong>🚨 نکته امنیتی بسیار مهم</strong>
+سامانه tamin.ir برای ثبت نهایی معمولاً OTP پیامکی می‌خواهد. عامل هیچ‌وقت نباید OTP را از حافظه استفاده کند — همیشه Human-in-the-Loop. Hermes باید صبر کند تا شما دستی OTP را وارد کنید، سپس ادامه دهد.
+</div>
+
+<h2 id="ch8-3">۸.۳ سناریو ۳: ارسال اظهارنامه مالیاتی</h2>
+
+<p>سامانه <code>tax.gov.ir</code> نسبت به tamin.ir پیچیده‌تر است — انواع اظهارنامه (عملکرد، ارزش افزوده، معاملات فصلی، حقوق) و فرم‌های مختلف دارد.</p>
+
+<h3>معماری Skill چند-فازی</h3>
+
+<div class="arch-diagram">
+  <div class="arch-box">دستور: "اظهارنامه معاملات فصلی سه‌ماهه دوم"</div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">Phase 1: جمع‌آوری داده</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">excel.read + openhuman.query</div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">Phase 2: تولید XML اظهارنامه</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">Python XML generator</div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">Phase 3: آپلود در tax.gov.ir</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">browser.browse_and_do</div>
+  </div>
+  <div class="arch-arrow">↓</div>
+  <div>
+    <div class="arch-box">Phase 4: تأیید نهایی + OTP</div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-box">Human-in-the-Loop</div>
+  </div>
+</div>
+
+<pre><code>---
+name: submit-quarterly-tax-declaration
+description: تولید و ارسال اظهارنامه معاملات فصلی به tax.gov.ir
+triggers:
+  - "اظهارنامه فصلی"
+  - "معاملات فصلی"
+  - "gharardad"
+---
+
+# مهارت: اظهارنامه معاملات فصلی
+
+## Phase 1: جمع‌آوری داده
+1. openhuman.get_files_in_folder("D:\\Office\\Invoices\\Q${quarter}\\")
+2. برای هر فاکتور:
+   excel.read_data_from_excel یا PDF parser
+3. تجمیع در یک جدول واحد:
+   - شماره اقتصادی طرف
+   - نوع (خرید/فروش)
+   - مبلغ کل
+   - مالیات بر ارزش افزوده
+   - تاریخ
+
+## Phase 2: تولید XML
+یک تابع Python که output را به فرمت رسمی
+tax.gov.ir تبدیل می‌کند (schema در D:\Office\Schemas\).
+
+## Phase 3: آپلود
+browser.browse_and_do(
+    url="https://tax.gov.ir/action/setLogin",
+    task="لاگین کن → منوی 'اظهارنامه‌ها' →
+          'معاملات فصلی' → 'ارسال جدید' →
+          آپلود XML → 'بررسی اولیه'"
+)
+
+## Phase 4: تأیید انسانی
+⚠️ حتماً قبل از "ثبت نهایی" از کاربر تأیید بگیر.
+عامل نباید خودش نهایی کند.
+
+hermes.pause_for_human(
+    message="اظهارنامه آماده ارسال است. مبلغ کل: ${total}.
+             آیا تأیید می‌کنید؟"
+)</code></pre>
+
+<h2 id="ch8-4">۸.۴ سناریو ۴: صورت‌حساب و اسناد پرداخت پیچیده</h2>
+
+<p>این همان کاری است که شما گفتید «در اکسل خیلی وقت می‌گیرد». بیایید یک الگوی حرفه‌ای بسازیم:</p>
+
+<h3>الگوی «سند پرداخت چند‌ماژوله»</h3>
+
+<p>یک سند پرداخت پیچیده معمولاً شامل:</p>
+<ul>
+  <li>هدر: اطلاعات شرکت پرداخت‌کننده و دریافت‌کننده</li>
+  <li>جدول اقلام (شرح، تعداد، قیمت واحد، جمع)</li>
+  <li>محاسبات: تخفیف، مالیات بر ارزش افزوده ۱۰٪، عوارض شهرداری، جمع کل</li>
+  <li>ردیف‌های شرطی (بعضی موارد فقط اگر مبلغ > X)</li>
+  <li>امضاءها و مهرها (placeholder)</li>
+  <li>خلاصه به‌فارسی و حروف</li>
+</ul>
+
+<pre><code>---
+name: complex-payment-document
+description: تولید سند پرداخت چندماژوله با فرمول‌های شرطی و
+             تبدیل عدد به حروف فارسی
+triggers:
+  - "سند پرداخت"
+  - "صورت‌حساب"
+  - "invoice"
+---
+
+# مهارت: سند پرداخت پیچیده
+
+## پارامترها
+- payer: شرکت پرداخت‌کننده (dict)
+- payee: دریافت‌کننده (dict)
+- items: لیست اقلام
+- vat_rate: 0.10 (پیش‌فرض)
+- municipal_tax_threshold: 100_000_000 ریال
+
+## گام‌ها
+
+### گام ۱: قالب اولیه
+excel.create_workbook("D:\\Office\\Invoices\\INV-${date}.xlsx")
+
+### گام ۲: هدر (سلول‌های ادغام‌شده)
+excel.merge_cells(start="A1", end="H3")
+excel.format_range(A1:H3, font_size=18, bold=true,
+                   alignment="center", bg_color="#1e3a8a",
+                   font_color="#FFFFFF")
+
+### گام ۳: بلوک اطلاعات دو ستونی
+- ستون A-D: اطلاعات پرداخت‌کننده
+- ستون E-H: اطلاعات دریافت‌کننده
+
+### گام ۴: جدول اقلام
+excel.create_table(
+    data_range="A10:F${n+10}",
+    table_name="items",
+    table_style="TableStyleMedium9"
+)
+
+### گام ۵: فرمول‌های محاسباتی
+
+- جمع اقلام:
+  =SUMPRODUCT(items[تعداد],items[قیمت واحد])
+
+- تخفیف (اگر جمع > 500 میلیون):
+  =IF(J1>500000000, J1*0.05, 0)
+
+- مالیات بر ارزش افزوده:
+  =(J1-J2)*0.10
+
+- عوارض شهرداری (اگر > آستانه):
+  =IF(J1>${municipal_tax_threshold}, J1*0.015, 0)
+
+- جمع کل:
+  =J1-J2+J3+J4
+
+### گام ۶: تبدیل عدد به حروف فارسی
+یک user function در excel نیست، پس از Python:
+```python
+from num2fawords import words
+words(final_amount) + " ریال"
+```
+و در سلول قرار بده.
+
+### گام ۷: قالب‌بندی حرفه‌ای
+- border برای همه cells
+- rtl direction
+- fonts: B Nazanin برای متن، Tahoma برای اعداد
+- footer با شماره صفحه و تاریخ
+</code></pre>
+
+<div class="callout callout-success">
+<strong>🎯 بازگشت سرمایه</strong>
+تولید یک سند پرداخت پیچیده که در اکسل دستی ۲۰-۳۰ دقیقه می‌گیرد، با این Skill حدود ۴۵ ثانیه طول می‌کشد. برای شرکتی که ماهانه ۵۰-۱۰۰ سند صادر می‌کند، سالانه بیش از ۱۰۰ ساعت صرفه‌جویی است.
+</div>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 9 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل نهم</div>
+  <h1>نگهداری، پشتیبان‌گیری و عیب‌یابی</h1>
+  <div class="chapter-desc">سیستم را در طول ماه‌ها زنده و سالم نگه دارید</div>
+</div>
+
+<h2 id="ch9-1">۹.۱ پشتیبان‌گیری از حافظه و مهارت‌ها</h2>
+
+<p>در Hermes یک دستور داخلی هست:</p>
+
+<pre><code>hermes backup
+
+# خروجی: ~/hermes-backup-2026-07-26.zip
+# شامل: config، api keys، memories، skills، sessions، profiles</code></pre>
+
+<p>برای OpenHuman، یک اسکریپت PowerShell بنویسید:</p>
+
+<pre><code># D:\Office\backup.ps1
+$date = Get-Date -Format "yyyy-MM-dd"
+$backupDir = "D:\Office\Backups\$date"
+New-Item -ItemType Directory -Force -Path $backupDir
+
+# OpenHuman
+Compress-Archive -Path "$env:USERPROFILE\.openhuman\*" `
+                 -DestinationPath "$backupDir\openhuman.zip"
+
+# Hermes
+Compress-Archive -Path "$env:USERPROFILE\.hermes\*" `
+                 -DestinationPath "$backupDir\hermes.zip"
+
+# فایل‌های اداری
+Compress-Archive -Path "D:\Office\Excel\*" `
+                 -DestinationPath "$backupDir\excel.zip"
+
+Write-Host "✅ Backup completed: $backupDir"</code></pre>
+
+<p>و یک Scheduled Task هفتگی:</p>
+
+<pre><code>schtasks /create /tn "OfficeAI-Backup" `
+  /tr "pwsh -File D:\Office\backup.ps1" `
+  /sc weekly /d SUN /st 03:00</code></pre>
+
+<h2 id="ch9-2">۹.۲ لاگ‌ها و رفع خطاهای رایج</h2>
+
+<table>
+<tr><th>مسیر لاگ</th><th>محتوا</th></tr>
+<tr><td><code>~/.hermes/logs/hermes.log</code></td><td>اجرای عامل، فراخوانی ابزارها</td></tr>
+<tr><td><code>~/.hermes/logs/mcp-excel.log</code></td><td>MCP server اکسل</td></tr>
+<tr><td><code>~/.hermes/logs/mcp-browser.log</code></td><td>MCP server مرورگر</td></tr>
+<tr><td><code>~/.openhuman/logs/</code></td><td>OpenHuman و auto-fetch</td></tr>
+</table>
+
+<h3>خطاهای پرتکرار</h3>
+
+<div class="callout callout-danger">
+<strong>❌ "MCP server 'excel' failed to start"</strong>
+دلیل: uv در PATH نیست یا فایروال جلوی uvx را گرفته. راه‌حل: <code>uv --version</code> را تست کنید، سپس فایروال Windows Defender → Allow app → پایتون و uv را اضافه کنید.
+</div>
+
+<div class="callout callout-danger">
+<strong>❌ "Playwright: Executable doesn't exist"</strong>
+راه‌حل: <code>uv run playwright install chromium</code> را دوباره اجرا کنید. اگر تحریم مشکل ساخت، از یک mirror استفاده کنید: <code>PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright</code>.
+</div>
+
+<div class="callout callout-danger">
+<strong>❌ "متن فارسی در فایل اکسل ⊕⊕⊕ نمایش داده می‌شود"</strong>
+دلیل: encoding نادرست. راه‌حل: <code>PYTHONIOENCODING=utf-8</code> را در env مربوط به mcp-excel در config.yaml بگذارید.
+</div>
+
+<h2 id="ch9-3">۹.۳ بهینه‌سازی هزینه API</h2>
+
+<ul>
+  <li><strong>Cache کردن:</strong> Hermes به‌طور خودکار سشن‌های تکراری را cache می‌کند. با <code>hermes cache stats</code> بررسی کنید.</li>
+  <li><strong>مدل ارزان‌تر برای Retrieval:</strong> در OpenHuman → Memory settings، برای عملیات ingestion (خلاصه‌سازی هر chunk) از <code>gemini-2.0-flash</code> یا <code>gpt-4o-mini</code> استفاده کنید.</li>
+  <li><strong>Local برای Vision:</strong> اگر GPU خوب دارید، <code>ollama pull qwen2.5vl:7b</code> برای CAPTCHA و OCR محلی.</li>
+</ul>
+
+<hr class="section-break">
+
+<!-- ============ CHAPTER 10 ============ -->
+<div class="chapter-header">
+  <div class="chapter-num">فصل دهم</div>
+  <h1>امنیت، انطباق و بهترین شیوه‌ها</h1>
+  <div class="chapter-desc">داده‌های حساس اداری را در امان نگه دارید</div>
+</div>
+
+<h2 id="ch10-1">۱۰.۱ مدیریت اسرار و توکن‌ها</h2>
+
+<div class="callout callout-warning">
+<strong>⚠️ هرگز</strong>
+کلید API را مستقیم داخل <code>config.yaml</code> نگذارید. همیشه از متغیرهای محیطی استفاده کنید (<code>${env:VAR_NAME}</code>). فایل <code>.env</code> را در <code>.gitignore</code> قرار دهید و روی هارد رمزنگاری شده نگه دارید.
+</div>
+
+<p>استفاده از Windows Credential Manager توصیه‌شده است:</p>
+
+<pre><code>cmdkey /generic:hermes-anthropic /user:api /pass:sk-ant-xxxxx
+cmdkey /generic:hermes-openai /user:api /pass:sk-proj-xxxxx</code></pre>
+
+<h2 id="ch10-2">۱۰.۲ داده‌های حساس و Privacy Mode</h2>
+
+<p>سه سطح حساسیت تعریف کنید:</p>
+
+<table>
+<tr><th>سطح</th><th>نمونه داده</th><th>مدل مجاز</th></tr>
+<tr><td>🟢 عمومی</td><td>ساختار سند، فرمول‌ها</td><td>هر مدل ابری</td></tr>
+<tr><td>🟡 محرمانه</td><td>لیست کارمندان، حقوق</td><td>مدل ابری با تعهد enterprise (Azure OpenAI)</td></tr>
+<tr><td>🔴 خیلی محرمانه</td><td>شماره ملی، حساب بانکی، OTP</td><td>فقط Ollama محلی</td></tr>
+</table>
+
+<h2 id="ch10-3">۱۰.۳ Human-in-the-loop برای عملیات مالی</h2>
+
+<p>در همه Skill های مالی، الگوی زیر را استفاده کنید:</p>
+
+<pre><code>## قانون طلایی: قبل از عملیات برگشت‌ناپذیر، تأیید بگیر
+
+hermes.confirm(
+    message=f"""
+    آیا مطمئن هستید؟
+    - نوع: ${operation_type}
+    - مبلغ: ${amount:,} ریال
+    - مقصد: ${destination}
+    - زمان: ${timestamp}
+    """,
+    require_typed_yes=true,  # کاربر باید "بله" را تایپ کند
+    timeout_seconds=300
+)</code></pre>
+
+<hr class="section-break">
+
+<!-- ============ REFERENCES ============ -->
+<h1 id="refs">📚 منابع و مراجع</h1>
+
+<h3>مخازن رسمی گیت‌هاب</h3>
+<ol>
+  <li><a href="https://github.com/tinyhumansai/openhuman">OpenHuman — tinyhumansai/openhuman</a></li>
+  <li><a href="https://github.com/NousResearch/hermes-agent">Hermes Agent — NousResearch/hermes-agent</a></li>
+  <li><a href="https://github.com/haris-musa/excel-mcp-server">Excel MCP Server — haris-musa/excel-mcp-server</a></li>
+  <li><a href="https://github.com/browser-use/browser-use">Browser Use — browser-use/browser-use</a></li>
+  <li><a href="https://github.com/NousResearch/hermes-agent-self-evolution">Hermes Self-Evolution (GEPA)</a></li>
+  <li><a href="https://github.com/NousResearch/hermes-agent/blob/main/skills/research/llm-wiki/SKILL.md">مثال SKILL.md رسمی</a></li>
+</ol>
+
+<h3>مستندات رسمی</h3>
+<ol>
+  <li><a href="https://tinyhumans.gitbook.io/openhuman/">OpenHuman GitBook Documentation</a></li>
+  <li><a href="https://hermes-agent.nousresearch.com/docs/">Hermes Agent Documentation</a></li>
+  <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp">MCP Guide for Hermes</a></li>
+  <li><a href="https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference">MCP Config Reference</a></li>
+  <li><a href="https://docs.browser-use.com/open-source/introduction">Browser Use Docs</a></li>
+  <li><a href="https://modelcontextprotocol.io/">Model Context Protocol Specification</a></li>
+  <li><a href="https://agentskills.io/specification">Agent Skills Specification</a></li>
+</ol>
+
+<h3>مقالات فنی و تحلیلی</h3>
+<ol>
+  <li><a href="https://alphasignalai.substack.com/p/how-openhuman-works-and-how-to-set">How OpenHuman Works — AlphaSignal</a></li>
+  <li><a href="https://medium.com/@creativeaininja/openhuman-gives-ai-a-memory-you-can-actually-read-34af4f226bc0">OpenHuman Memory Deep Dive</a></li>
+  <li><a href="https://dev.to/emmanuelthecoder/hermes-the-self-improving-agent-you-can-actually-run-yourself-555l">Hermes Self-Improving Agent</a></li>
+  <li><a href="https://blogs.nvidia.com/blog/rtx-ai-garage-hermes-agent-dgx-spark/">NVIDIA: Hermes on RTX</a></li>
+  <li><a href="https://you.com/resources/hermes-agent-ydc-web-search-skills-that-improve-themselves">Hermes Self-Improving Skills Case Study</a></li>
+  <li><a href="https://runmini.com/blog/articles/2026-openclaw-vs-hermes-agent-vs-openhuman-ai-framework-guide.html">مقایسه ۲۰۲۶: OpenClaw vs Hermes vs OpenHuman</a></li>
+</ol>
+
+<h3>منابع چینی</h3>
+<ol>
+  <li><a href="https://mcp.csdn.net/6a4793b9662f9a54cb898ada.html">从聊天助手到可持续进化的个人AI智能体</a></li>
+  <li><a href="https://cloud.tencent.com/developer/article/2672520">OpenHuman全面解析 - 腾讯云</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/2056418385601287293">2026年AI智能体记忆系统实战</a></li>
+  <li><a href="https://my.oschina.net/u/3998687/blog/19720964">Hermes Agent 持久记忆与技能自进化</a></li>
+</ol>
+
+<h3>سایر منابع مرتبط</h3>
+<ol>
+  <li><a href="https://sso.my.gov.ir/login">پنجره ملی خدمات دولت هوشمند ایران</a></li>
+  <li><a href="https://eservices.tamin.ir/">خدمات الکترونیک سازمان تأمین اجتماعی</a></li>
+  <li><a href="https://tax.gov.ir/">سازمان امور مالیاتی کشور</a></li>
+  <li><a href="https://ollama.com/">Ollama — اجرای مدل‌های محلی</a></li>
+</ol>
+
+<div class="callout callout-info" style="margin-top: 50px;">
+<strong>📖 پایان سند اول</strong>
+این سند «معماری و راه‌اندازی» را پوشش داد. برای یادگیری عمیق قابلیت‌های هر ابزار با ده‌ها مثال کد و سناریوی عملی، به سند دوم مراجعه کنید: <code>02_capabilities_tutorial.html</code>.
+</div>
+
+<div style="text-align: center; margin-top: 80px; padding: 30px; background: linear-gradient(135deg, #1e3a8a, #6b21a8); color: white; border-radius: 15px;">
+<h2 style="color: white; border: none; background: none;">✨ موفق باشید</h2>
+<p style="opacity: 0.95;">نسخه ۱.۰ • جولای ۲۰۲۶ • ساخته‌شده برای کاربران حرفه‌ای اداری ایرانی</p>
+</div>
+
+</div>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>
